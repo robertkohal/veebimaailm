@@ -1,0 +1,98 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1208" measuredH="800" mockupW="1024" mockupH="800">
+  <controls>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::TitleWindow" x="184" y="0" w="1024" h="800" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bottomheight>13</bottomheight>
+        <close>true</close>
+        <dragger>false</dragger>
+        <maximizeRestore>true</maximizeRestore>
+        <minimize>true</minimize>
+        <text>Voterz</text>
+        <topheight>26</topheight>
+        <verticalScrollbar>true</verticalScrollbar>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::Canvas" x="184" y="25" w="1008" h="145" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="-1"/>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::Image" x="203" y="40" w="255" h="88" measuredW="77" measuredH="79" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>false</bold>
+        <borderStyle>none</borderStyle>
+        <filter>true</filter>
+        <text>Logo</text>
+      </controlProperties>
+    </control>
+    <control controlID="15" controlTypeID="com.balsamiq.mockups::Label" x="1026" y="32" w="-1" h="-1" measuredW="64" measuredH="22" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>Logi%20sisse</text>
+      </controlProperties>
+    </control>
+    <control controlID="16" controlTypeID="com.balsamiq.mockups::Button" x="1026" y="59" w="158" h="51" measuredW="101" measuredH="27" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>40463</color>
+        <href>sisse_logitult%26bm%3Bsisse_logitult.bmml%26bm%3Bsisse_logitult.bmml%26bm%3Bsisse_logitult.bmml</href>
+        <icon>LockIcon%7Csmall</icon>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22842%2C59%2C1000%2C110%22%20href%3D%22sisse_logitult.bmml%22%20alt%3D%22sisse_logitult%22%20id%3D%2216%22/%3E</map>
+        <menuIcon>false</menuIcon>
+        <text>ID-Kaart</text>
+      </controlProperties>
+    </control>
+    <control controlID="17" controlTypeID="com.balsamiq.mockups::HelpButton" x="630" y="34" w="-1" h="-1" measuredW="18" measuredH="18" zOrder="5" locked="false" isInGroup="-1"/>
+    <control controlID="19" controlTypeID="com.balsamiq.mockups::Label" x="654" y="33" w="-1" h="-1" measuredW="121" measuredH="22" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>Abi%20%7C%20KKK%20%7C%20Kontakt</text>
+      </controlProperties>
+    </control>
+    <control controlID="20" controlTypeID="com.balsamiq.mockups::LinkBar" x="216" y="140" w="-1" h="-1" measuredW="416" measuredH="30" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>24</size>
+        <text>Avaleht%2C%20Statistika%2C%20Valimisjaoskonnad</text>
+      </controlProperties>
+    </control>
+    <control controlID="34" controlTypeID="com.balsamiq.mockups::Title" x="556" y="185" w="-1" h="-1" measuredW="280" measuredH="43" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Kandideerimine</text>
+      </controlProperties>
+    </control>
+    <control controlID="49" controlTypeID="com.balsamiq.mockups::FieldSet" x="220" y="253" w="336" h="215" measuredW="200" measuredH="170" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Kandideeri</text>
+      </controlProperties>
+    </control>
+    <control controlID="50" controlTypeID="com.balsamiq.mockups::ComboBox" x="239" y="313" w="108" h="-1" measuredW="61" measuredH="93" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Tartu%0ATallinn%0AP%E4rnumaa%0AIda-Virumaa%0ASaaremaa</text>
+      </controlProperties>
+    </control>
+    <control controlID="51" controlTypeID="com.balsamiq.mockups::Label" x="239" y="277" w="66" h="-1" measuredW="64" measuredH="26" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>18</size>
+        <text>Piirkond</text>
+      </controlProperties>
+    </control>
+    <control controlID="52" controlTypeID="com.balsamiq.mockups::Label" x="376" y="277" w="78" h="-1" measuredW="66" measuredH="26" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>18</size>
+        <text>Erakond</text>
+      </controlProperties>
+    </control>
+    <control controlID="53" controlTypeID="com.balsamiq.mockups::ComboBox" x="376" y="313" w="152" h="-1" measuredW="105" measuredH="93" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Uus%20Erakond%0AVana%20Erakond%0ASoliitsed%20Mehed%0AEesti%20Esimene%20Erakond%0APuudub</text>
+      </controlProperties>
+    </control>
+    <control controlID="54" controlTypeID="com.balsamiq.mockups::Button" x="320" y="426" w="-1" h="-1" measuredW="86" measuredH="27" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <href>kandideeri_kinnitus%26bm%3Bkandideeri_kinnitus.bmml%26bm%3Bkandideeri_kinnitus.bmml%26bm%3Bkandideeri_kinnitus.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22136%2C426%2C222%2C453%22%20href%3D%22kandideeri_kinnitus.bmml%22%20alt%3D%22kandideeri_kinnitus%22%20id%3D%2254%22/%3E</map>
+        <text>Kandideeri</text>
+      </controlProperties>
+    </control>
+    <control controlID="55" controlTypeID="com.balsamiq.mockups::TextArea" x="607" y="263" w="-1" h="-1" measuredW="200" measuredH="140" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Te%20ei%20ole%20veel%20kandideerinud.</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

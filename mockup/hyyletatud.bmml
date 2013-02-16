@@ -1,0 +1,140 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1208" measuredH="800" mockupW="1024" mockupH="800">
+  <controls>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::TitleWindow" x="184" y="0" w="1024" h="800" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bottomheight>13</bottomheight>
+        <close>true</close>
+        <dragger>false</dragger>
+        <maximizeRestore>true</maximizeRestore>
+        <minimize>true</minimize>
+        <text>Voterz</text>
+        <topheight>26</topheight>
+        <verticalScrollbar>true</verticalScrollbar>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::Canvas" x="184" y="25" w="1008" h="145" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="-1"/>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::Image" x="203" y="40" w="255" h="88" measuredW="77" measuredH="79" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>false</bold>
+        <borderStyle>none</borderStyle>
+        <filter>true</filter>
+        <text>Logo</text>
+      </controlProperties>
+    </control>
+    <control controlID="15" controlTypeID="com.balsamiq.mockups::Label" x="1026" y="32" w="-1" h="-1" measuredW="64" measuredH="22" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>Logi%20sisse</text>
+      </controlProperties>
+    </control>
+    <control controlID="16" controlTypeID="com.balsamiq.mockups::Button" x="1026" y="59" w="158" h="51" measuredW="101" measuredH="27" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>40463</color>
+        <href>sisse_logitult%26bm%3Bsisse_logitult.bmml%26bm%3Bsisse_logitult.bmml%26bm%3Bsisse_logitult.bmml</href>
+        <icon>LockIcon%7Csmall</icon>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22842%2C59%2C1000%2C110%22%20href%3D%22sisse_logitult.bmml%22%20alt%3D%22sisse_logitult%22%20id%3D%2216%22/%3E</map>
+        <menuIcon>false</menuIcon>
+        <text>ID-Kaart</text>
+      </controlProperties>
+    </control>
+    <control controlID="17" controlTypeID="com.balsamiq.mockups::HelpButton" x="630" y="34" w="-1" h="-1" measuredW="18" measuredH="18" zOrder="5" locked="false" isInGroup="-1"/>
+    <control controlID="19" controlTypeID="com.balsamiq.mockups::Label" x="654" y="33" w="-1" h="-1" measuredW="121" measuredH="22" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>14</size>
+        <text>Abi%20%7C%20KKK%20%7C%20Kontakt</text>
+      </controlProperties>
+    </control>
+    <control controlID="20" controlTypeID="com.balsamiq.mockups::LinkBar" x="216" y="140" w="-1" h="-1" measuredW="416" measuredH="30" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>24</size>
+        <text>Avaleht%2C%20Statistika%2C%20Valimisjaoskonnad</text>
+      </controlProperties>
+    </control>
+    <control controlID="27" controlTypeID="com.balsamiq.mockups::DataGrid" x="411" y="252" w="744" h="521" measuredW="317" measuredH="187" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Nimi%5Cr%2C%20Erakond%2C%20H%E4%E4leta%0AKati%20Kood%2C%20Eesti%20Esimene%20Erakond%0AMati%20J%E4%E4%2C%20Soliidsed%20mehed%20%0AKarl%20Gustav%20%2C%20Uus%20Erakond%0APeeter%20Kujur%2C%20Vana%20Erakond%0ARiho%20Vaenlane%2C%20Vana%20Erakond%0A%7B22L%2C%2020L%2C%2010C%7D</text>
+        <verticalScrollbar>true</verticalScrollbar>
+      </controlProperties>
+    </control>
+    <control controlID="28" controlTypeID="com.balsamiq.mockups::Button" x="1035" y="289" w="-1" h="-1" measuredW="66" measuredH="27" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>H%E4%E4leta</text>
+      </controlProperties>
+    </control>
+    <control controlID="29" controlTypeID="com.balsamiq.mockups::Button" x="1035" y="319" w="-1" h="-1" measuredW="66" measuredH="27" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>H%E4%E4leta</text>
+      </controlProperties>
+    </control>
+    <control controlID="30" controlTypeID="com.balsamiq.mockups::Button" x="1035" y="349" w="-1" h="-1" measuredW="66" measuredH="27" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>H%E4%E4leta</text>
+      </controlProperties>
+    </control>
+    <control controlID="31" controlTypeID="com.balsamiq.mockups::Button" x="1035" y="376" w="-1" h="-1" measuredW="66" measuredH="27" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <href>hyyletamine_kinnitus%26bm%3Bhyyletamine_kinnitus.bmml%26bm%3Bhyyletamine_kinnitus.bmml%26bm%3Bhyyletamine_kinnitus.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22851%2C376%2C917%2C403%22%20href%3D%22hyyletamine_kinnitus.bmml%22%20alt%3D%22hyyletamine_kinnitus%22%20id%3D%2231%22/%3E</map>
+        <text>H%E4%E4leta</text>
+      </controlProperties>
+    </control>
+    <control controlID="32" controlTypeID="com.balsamiq.mockups::Button" x="1035" y="411" w="-1" h="-1" measuredW="66" measuredH="27" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>H%E4%E4leta</text>
+      </controlProperties>
+    </control>
+    <control controlID="34" controlTypeID="com.balsamiq.mockups::Title" x="648" y="187" w="-1" h="-1" measuredW="219" measuredH="43" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>H%E4%E4letamine</text>
+      </controlProperties>
+    </control>
+    <control controlID="35" controlTypeID="com.balsamiq.mockups::TextArea" x="198" y="597" w="200" h="118" measuredW="200" measuredH="140" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Te%20olete%20h%E4%E4letanud%20Peeter%20Kujuri%20poolt.%5B14.02.2013%5D</text>
+      </controlProperties>
+    </control>
+    <control controlID="46" controlTypeID="__group__" x="198" y="240" w="204" h="321" measuredW="204" measuredH="321" zOrder="16" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::FieldSet" x="0" y="0" w="204" h="321" measuredW="200" measuredH="170" zOrder="0" locked="false" isInGroup="46">
+          <controlProperties>
+            <text>Filtreeri</text>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::ComboBox" x="13" y="45" w="186" h="-1" measuredW="61" measuredH="93" zOrder="1" locked="false" isInGroup="46">
+          <controlProperties>
+            <text>Tartu%0ATallinn%0ATartumaa%0AP%E4rnumaa%0AV%F5rumaa</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="13" y="22" w="80" h="-1" measuredW="64" measuredH="26" zOrder="2" locked="false" isInGroup="46">
+          <controlProperties>
+            <size>18</size>
+            <text>Piirkond</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::ComboBox" x="13" y="170" w="188" h="-1" measuredW="105" measuredH="78" zOrder="3" locked="false" isInGroup="46">
+          <controlProperties>
+            <text>Uus%20Erakond%0AVana%20Erakond%0ASoliidsed%20mehed%0AEesti%20Esimene%20Erakond</text>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::SearchBox" x="13" y="271" w="188" h="-1" measuredW="120" measuredH="25" zOrder="4" locked="false" isInGroup="46">
+          <controlProperties>
+            <text>Nimi</text>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::Label" x="13" y="146" w="94" h="-1" measuredW="66" measuredH="26" zOrder="5" locked="false" isInGroup="46">
+          <controlProperties>
+            <size>18</size>
+            <text>Erakond</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="47" controlTypeID="com.balsamiq.mockups::Button" x="271" y="647" w="-1" h="-1" measuredW="91" measuredH="27" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <href>hyyletamine_tyhista%26bm%3Bhyyletamine_tyhista.bmml%26bm%3Bhyyletamine_tyhista.bmml%26bm%3Bhyyletamine_tyhista.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2287%2C647%2C178%2C674%22%20href%3D%22hyyletamine_tyhista.bmml%22%20alt%3D%22hyyletamine_tyhista%22%20id%3D%2247%22/%3E</map>
+        <text>T%FChista%20h%E4%E4l</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
