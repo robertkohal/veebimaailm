@@ -64,32 +64,32 @@
         <text>Valimisringkond%20nr%201</text>
       </controlProperties>
     </control>
-    <control controlID="26" controlTypeID="com.balsamiq.mockups::Button" x="203" y="246" w="154" h="35" measuredW="139" measuredH="27" zOrder="12" locked="false" isInGroup="-1">
+    <control controlID="26" controlTypeID="com.balsamiq.mockups::Button" x="203" y="284" w="154" h="35" measuredW="139" measuredH="27" zOrder="12" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Valimisringkond%20nr%201</text>
       </controlProperties>
     </control>
-    <control controlID="27" controlTypeID="com.balsamiq.mockups::Button" x="203" y="281" w="154" h="35" measuredW="142" measuredH="27" zOrder="13" locked="false" isInGroup="-1">
+    <control controlID="27" controlTypeID="com.balsamiq.mockups::Button" x="203" y="319" w="154" h="35" measuredW="142" measuredH="27" zOrder="13" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Valimisringkond%20nr%202</text>
       </controlProperties>
     </control>
-    <control controlID="28" controlTypeID="com.balsamiq.mockups::Button" x="203" y="351" w="154" h="35" measuredW="142" measuredH="27" zOrder="14" locked="false" isInGroup="-1">
+    <control controlID="28" controlTypeID="com.balsamiq.mockups::Button" x="203" y="389" w="154" h="35" measuredW="142" measuredH="27" zOrder="14" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Valimisringkond%20nr%204</text>
       </controlProperties>
     </control>
-    <control controlID="29" controlTypeID="com.balsamiq.mockups::Button" x="203" y="316" w="154" h="35" measuredW="142" measuredH="27" zOrder="15" locked="false" isInGroup="-1">
+    <control controlID="29" controlTypeID="com.balsamiq.mockups::Button" x="203" y="354" w="154" h="35" measuredW="142" measuredH="27" zOrder="15" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Valimisringkond%20nr%203</text>
       </controlProperties>
     </control>
-    <control controlID="30" controlTypeID="com.balsamiq.mockups::Button" x="203" y="386" w="154" h="35" measuredW="141" measuredH="27" zOrder="16" locked="false" isInGroup="-1">
+    <control controlID="30" controlTypeID="com.balsamiq.mockups::Button" x="203" y="424" w="154" h="35" measuredW="141" measuredH="27" zOrder="16" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Valimisringkond%20nr%205</text>
       </controlProperties>
     </control>
-    <control controlID="31" controlTypeID="com.balsamiq.mockups::Button" x="203" y="421" w="154" h="35" measuredW="142" measuredH="27" zOrder="17" locked="false" isInGroup="-1">
+    <control controlID="31" controlTypeID="com.balsamiq.mockups::Button" x="203" y="459" w="154" h="35" measuredW="142" measuredH="27" zOrder="17" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Valimisringkond%20nr%206</text>
       </controlProperties>
@@ -97,6 +97,11 @@
     <control controlID="32" controlTypeID="com.balsamiq.mockups::Label" x="934" y="267" w="-1" h="-1" measuredW="192" measuredH="21" zOrder="18" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Haabersti%2C%20Kristiine%2C%20P%F5hja-Tallinn</text>
+      </controlProperties>
+    </control>
+    <control controlID="33" controlTypeID="com.balsamiq.mockups::Button" x="203" y="246" w="154" h="35" measuredW="116" measuredH="27" zOrder="19" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>K%F5ik%20ringkonnad</text>
       </controlProperties>
     </control>
   </controls>
