@@ -44,10 +44,10 @@
         <text>Abi%20%7C%20KKK%20%7C%20Kontakt</text>
       </controlProperties>
     </control>
-    <control controlID="20" controlTypeID="com.balsamiq.mockups::LinkBar" x="216" y="140" w="-1" h="-1" measuredW="416" measuredH="30" zOrder="7" locked="false" isInGroup="-1">
+    <control controlID="20" controlTypeID="com.balsamiq.mockups::LinkBar" x="216" y="140" w="-1" h="-1" measuredW="639" measuredH="30" zOrder="7" locked="false" isInGroup="-1">
       <controlProperties>
         <size>24</size>
-        <text>Avaleht%2C%20Statistika%2C%20Valimisjaoskonnad</text>
+        <text>Avaleht%2C%20H%E4%E4leta%2C%20Kandideeri%2C%20Valimisnimekirjad%2C%20Statistika</text>
       </controlProperties>
     </control>
     <control controlID="27" controlTypeID="com.balsamiq.mockups::DataGrid" x="411" y="252" w="744" h="521" measuredW="317" measuredH="187" zOrder="8" locked="false" isInGroup="-1">

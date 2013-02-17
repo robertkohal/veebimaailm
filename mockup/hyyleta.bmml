@@ -44,10 +44,12 @@
         <text>Abi%20%7C%20KKK%20%7C%20Kontakt</text>
       </controlProperties>
     </control>
-    <control controlID="20" controlTypeID="com.balsamiq.mockups::LinkBar" x="216" y="140" w="-1" h="-1" measuredW="416" measuredH="30" zOrder="7" locked="false" isInGroup="-1">
+    <control controlID="20" controlTypeID="com.balsamiq.mockups::LinkBar" x="216" y="140" w="-1" h="-1" measuredW="639" measuredH="30" zOrder="7" locked="false" isInGroup="-1">
       <controlProperties>
+        <hrefs>avaleht%26bm%3Bavaleht.bmml%26bm%3Bavaleht.bmml%26bm%3Bavaleht.bmml%2Chyyleta%26bm%3Bhyyleta.bmml%26bm%3Bhyyleta.bmml%26bm%3Bhyyleta.bmml%2Ckandideeri%26bm%3Bkandideeri.bmml%26bm%3Bkandideeri.bmml%26bm%3Bkandideeri.bmml%2Ckandideerinud%26bm%3Bkandideerinud.bmml%26bm%3Bkandideerinud.bmml%26bm%3Bkandideerinud.bmml%2Cstatistika%26bm%3Bstatistika.bmml%26bm%3Bstatistika.bmml%26bm%3Bstatistika.bmml</hrefs>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2232%2C142%2C110%2C166%22%20href%3D%22avaleht.bmml%22%20alt%3D%22avaleht%22%20id%3D%2220%22/%3E%0A%3Carea%20shape%3D%22rect%22%20coords%3D%22128%2C142%2C208%2C166%22%20href%3D%22hyyleta.bmml%22%20alt%3D%22hyyleta%22%20id%3D%2220%22/%3E%0A%3Carea%20shape%3D%22rect%22%20coords%3D%22226%2C142%2C343%2C166%22%20href%3D%22kandideeri.bmml%22%20alt%3D%22kandideeri%22%20id%3D%2220%22/%3E%0A%3Carea%20shape%3D%22rect%22%20coords%3D%22361%2C142%2C549%2C166%22%20href%3D%22kandideerinud.bmml%22%20alt%3D%22kandideerinud%22%20id%3D%2220%22/%3E%0A%3Carea%20shape%3D%22rect%22%20coords%3D%22567%2C142%2C671%2C166%22%20href%3D%22statistika.bmml%22%20alt%3D%22statistika%22%20id%3D%2220%22/%3E%0A</map>
         <size>24</size>
-        <text>Avaleht%2C%20Statistika%2C%20Valimisjaoskonnad</text>
+        <text>Avaleht%2C%20H%E4%E4leta%2C%20Kandideeri%2C%20Valimisnimekirjad%2C%20Statistika</text>
       </controlProperties>
     </control>
     <control controlID="27" controlTypeID="com.balsamiq.mockups::DataGrid" x="411" y="252" w="744" h="521" measuredW="317" measuredH="187" zOrder="8" locked="false" isInGroup="-1">

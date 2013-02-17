@@ -42,10 +42,12 @@
         <text>Abi%20%7C%20KKK%20%7C%20Kontakt</text>
       </controlProperties>
     </control>
-    <control controlID="20" controlTypeID="com.balsamiq.mockups::LinkBar" x="216" y="140" w="-1" h="-1" measuredW="416" measuredH="30" zOrder="7" locked="false" isInGroup="-1">
+    <control controlID="20" controlTypeID="com.balsamiq.mockups::LinkBar" x="216" y="140" w="-1" h="-1" measuredW="639" measuredH="30" zOrder="7" locked="false" isInGroup="-1">
       <controlProperties>
+        <hrefs>avaleht%26bm%3Bavaleht.bmml%26bm%3Bavaleht.bmml%26bm%3Bavaleht.bmml%2Chyyleta%26bm%3Bhyyleta.bmml%26bm%3Bhyyleta.bmml%26bm%3Bhyyleta.bmml%2Ckandideeri%26bm%3Bkandideeri.bmml%26bm%3Bkandideeri.bmml%26bm%3Bkandideeri.bmml%2Ckandideerinud%26bm%3Bkandideerinud.bmml%26bm%3Bkandideerinud.bmml%26bm%3Bkandideerinud.bmml%2Cstatistika%26bm%3Bstatistika.bmml%26bm%3Bstatistika.bmml%26bm%3Bstatistika.bmml</hrefs>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2228%2C142%2C106%2C166%22%20href%3D%22avaleht.bmml%22%20alt%3D%22avaleht%22%20id%3D%2220%22/%3E%0A%3Carea%20shape%3D%22rect%22%20coords%3D%22124%2C142%2C204%2C166%22%20href%3D%22hyyleta.bmml%22%20alt%3D%22hyyleta%22%20id%3D%2220%22/%3E%0A%3Carea%20shape%3D%22rect%22%20coords%3D%22222%2C142%2C339%2C166%22%20href%3D%22kandideeri.bmml%22%20alt%3D%22kandideeri%22%20id%3D%2220%22/%3E%0A%3Carea%20shape%3D%22rect%22%20coords%3D%22357%2C142%2C545%2C166%22%20href%3D%22kandideerinud.bmml%22%20alt%3D%22kandideerinud%22%20id%3D%2220%22/%3E%0A%3Carea%20shape%3D%22rect%22%20coords%3D%22563%2C142%2C667%2C166%22%20href%3D%22statistika.bmml%22%20alt%3D%22statistika%22%20id%3D%2220%22/%3E%0A</map>
         <size>24</size>
-        <text>Avaleht%2C%20Statistika%2C%20Valimisjaoskonnad</text>
+        <text>Avaleht%2C%20H%E4%E4leta%2C%20Kandideeri%2C%20Valimisnimekirjad%2C%20Statistika</text>
       </controlProperties>
     </control>
     <control controlID="21" controlTypeID="com.balsamiq.mockups::Title" x="602" y="188" w="-1" h="-1" measuredW="173" measuredH="43" zOrder="8" locked="false" isInGroup="-1">
@@ -102,6 +104,30 @@
     <control controlID="33" controlTypeID="com.balsamiq.mockups::Button" x="203" y="246" w="154" h="35" measuredW="116" measuredH="27" zOrder="19" locked="false" isInGroup="-1">
       <controlProperties>
         <text>K%F5ik%20ringkonnad</text>
+      </controlProperties>
+    </control>
+    <control controlID="34" controlTypeID="com.balsamiq.mockups::Label" x="812" y="548" w="-1" h="-1" measuredW="21" measuredH="81" zOrder="20" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Vana%20Erakond</text>
+        <textOrientation>down</textOrientation>
+      </controlProperties>
+    </control>
+    <control controlID="35" controlTypeID="com.balsamiq.mockups::Label" x="739" y="548" w="-1" h="-1" measuredW="21" measuredH="75" zOrder="21" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Uus%20Erakond</text>
+        <textOrientation>down</textOrientation>
+      </controlProperties>
+    </control>
+    <control controlID="36" controlTypeID="com.balsamiq.mockups::Label" x="602" y="548" w="-1" h="-1" measuredW="21" measuredH="96" zOrder="22" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Soliidsed%20Mehed</text>
+        <textOrientation>down</textOrientation>
+      </controlProperties>
+    </control>
+    <control controlID="37" controlTypeID="com.balsamiq.mockups::Label" x="535" y="548" w="-1" h="-1" measuredW="21" measuredH="136" zOrder="23" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Eesti%20Esimene%20Erakond</text>
+        <textOrientation>down</textOrientation>
       </controlProperties>
     </control>
   </controls>
