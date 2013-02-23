@@ -1,49 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="content-type" content="text/html;charset=windows-1257" />
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
-	<meta charset="windows-1257" />
 	<title>E-valimised</title>
     <link href="style/style.css" rel="stylesheet" type="text/css" media="all" />
+    <script src="./script/jquery-1.9.1.js"></script> 
+    <script> <!--Selleks, et kaasata header faili. -->
+        <!-- http://www.attackofdesign.com/using-jquery-to-include-files/ -->
+        $(document).ready(function(){
+            $(".js-include").each(function(){
+                var inc=$(this);
+                $.get(inc.attr("title"), function(data){
+                    inc.replaceWith(data);
+                });
+            });
+        }); 
+    </script>
 </head>
 
 <body>
-
-	<div id="page-wrap">
-		<div id="header">
-			<div id="logo">
-				<a href="avaleht.html" alt="Avaleht">E-valimised</a>
-			</div>
-			<div id="help">
-				<ul>
-					<li><a href="#">Abi</a></li>
-					<li><a href="#">KKK</a></li>
-					<li><a href="#">Kontakt</a></li>
-				</ul>
-			</div>
-			<div id="main-menu">
-				<ul>
-					<li><a href="avaleht.html">Avaleht</a></li>
-					<li><a href="haaleta.html">Hääleta</a></li>
-					<li><a href="kandideeri.html">Kandideeri</a></li>
-					<li><a href="valimisnimekiri.html">Valimisnimekiri</a></li>
-					<li><a href="statistika.html">Statistika</a></li>
-				</ul>
-			</div>
-			<div id="login">
-				<p>Logi sisse ID-kaardiga</p>
-				<a href="#">
-					<img src="images/idkaart.gif" alt="Vajuta siia" />
-				</a>
-			</div>
-		</div>
-		<div id="content">
-			<img id="map" src="images/kontuurkaart.jpg" alt="kaart" />
-		</div>
-		
+    <div id="page-wrap">
+    <div class="js-include" title="header.html"></div>
+        <div id="content">
+            <img id="map" src="images/kontuurkaart.jpg" alt="kaart" />
+        <div>
 		<div id="footer">
-
 		</div>
 	</div>
 

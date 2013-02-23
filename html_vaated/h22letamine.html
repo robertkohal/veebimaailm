@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=windows-1257" />
+	<meta http-equiv="X-UA-Compatible" content="IE=9" />
+	<meta charset="windows-1257" />
+    <title>Hääletamine</title>
+    <link href="style/style.css" rel="stylesheet" type="text/css" media="all" />
+    <script src="./script/jquery-1.9.1.js"></script> 
+    <script> <!--Selleks, et kaasata header faili. -->
+        <!-- http://www.attackofdesign.com/using-jquery-to-include-files/ -->
+        $(document).ready(function(){
+            $(".js-include").each(function(){
+                var inc=$(this);
+                $.get(inc.attr("title"), function(data){
+                    inc.replaceWith(data);
+                });
+            });
+        }); 
+    </script>
+</head>
+
+<body>
+    <div id="page-wrap">
+        <div class="js-include" title="header.html"></div>
+        
+        <div id="content">
+            <h1>Hääletamine</h1>
+            <form>
+            	<div id="voting-filter">
+	            	<fieldset>
+	            		<legend>Filtreeri</legend>
+	            		<p>
+	            			<label>Piirkond</label><br/>
+	            			<input type="text" list="districts">
+	            				<datalist id="districts">
+	            					<option>Tartu
+	            					<option>Tallinn
+	            					<option>Pärnumaa
+	            					<option>Valgamaa
+	            					<option>Põlvamaa
+	            				</datalist>
+	            			<br/><label>Erakond</label><br/>
+	            			<input type="text" list="politics-party">
+	            				<datalist id="politics-party">
+	            					<option>Eesti Esimene Erakond
+	            					<option>Soliidsed mehed
+	            					<option>Uus Erakond
+	            					<option>Vana Erakond
+	            				</datalist>
+	            			<br/><label>Kandidaadi nimi</label><br/>
+	            			<input type="search" name="search-candidate" placeholder="Nimi">
+	            		</p>
+	            	</fieldset>
+            	</div>
+            </form>
+            	<table class="voting-table">
+	        		<thead>
+	        			<tr>
+	        				<th class="name">Nimi</th>
+	        				<th class="party">Erakond</th>
+	        				<th class="vote">Hääleta</th>
+	        			</tr>
+	        		</thead>
+	        		<tbody>
+	        			<tr>
+	        				<td class="name">Kati Kood
+	        				</td>
+	        				<td class="party">Eesti Esimene Erakond
+	        				</td>
+	        				<td class="vote">
+	        				</td>
+	        			</tr>
+	        			<tr>
+	        				<td class="name">Mati Jää
+	        				</td>
+	        				<td class="party">Soliidsed mehed
+	        				</td>
+	        				<td class="vote">
+	        				</td>
+	        			</tr>
+	        			<tr>
+	        				<td class="name">Karl Gustav
+	        				</td>
+	        				<td class="party">Uus Erakond
+	        				</td>
+	        				<td class="vote">
+	        				</td>
+	        			</tr>
+	        			<tr>
+	        				<td class="name">Peter Kujur
+	        				</td>
+	        				<td class="party">Vana Erakond
+	        				</td>
+	        				<td class="vote">
+	        				</td>
+	        			</tr>
+	        			<tr>
+	        				<td class="name">Riho Herilane
+	        				</td>
+	        				<td class="party">Vana Erakond
+	        				</td>
+	        				<td class="vote">
+	        				</td>
+	        			</tr>
+	        		</tbody>
+	        	</table>
+            <div id="is_voted_box">
+            	<fieldset>
+            		<div id="is_voted_text">Te ei ole veel hääletanud.</div>
+            	</fieldset>
+            </div>
+        </div>
+        
+        <div id="footer">
+        </div>
+    </div>
+</body>
+
+</html> 

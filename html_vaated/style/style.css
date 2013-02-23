@@ -69,3 +69,49 @@ a, a:visited {
 #map {
 	width: 100%;
 }
+#voting-filter {
+	float: left;
+	margin-left: 2%;
+	width: 28%;
+	margin-bottom: 2%;
+}
+#is_voted_box {
+	margin-left: 2%;
+	width: 28%;
+}
+table.voting-table {
+	border: 1px solid black;
+	margin-right:3%;	
+	width: 65%;
+	float: right;
+	border-collapse: collapse;	
+}
+table.voting-table th {
+	border: 1px solid black;
+	text-align: center;
+	background-color: #330099;
+}
+table.voting-table td {
+	border: 1px solid black;
+}
+table.voting-table th.name {
+
+	width: 47%;
+}
+table.voting-table th.party {
+	width: 47%;
+}
+table.voting-table th.vote {
+	width: *;
+}
+h1 {
+	text-align: center;
+}
+fieldset.apply-for {
+	margin-left: 2%;
+	width: 20%;
+}
+fieldset.is_applyed_for {
+	float: right;
+	margin-right: 44%;
+}
