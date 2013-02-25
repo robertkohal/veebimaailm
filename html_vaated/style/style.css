@@ -18,9 +18,17 @@ a, a:visited {
 	text-decoration: none;
 }
 #page-wrap {
-	min-height: 400px;
-	width: 940px;
+	/*min-height: 400px;
+	width: 940px;*/
+	width: 100%;
+	/*min-width: 600px;*/
 	margin: 0 auto;
+}
+@media all and (max-width: 320px) and (min-width: 100px) {
+	#content {
+		background: blue;
+		min-height: 200px;
+	}
 }
 #content {
 	background: blue;
@@ -79,12 +87,24 @@ a, a:visited {
 	margin-left: 2%;
 	width: 28%;
 }
+table.list-table {
+	float: right;
+	border: 1px solid black;
+	margin-right:30%;
+	width: 35%;
+	
+}
+table.list-table td {
+	text-align: center;
+	border: 1px solid black;
+	
+}
 table.voting-table {
 	border: 1px solid black;
 	margin-right:3%;	
 	width: 65%;
 	float: right;
-	border-collapse: collapse;	
+	border-collapse: collapse;
 }
 table.voting-table th {
 	border: 1px solid black;
@@ -114,4 +134,15 @@ fieldset.apply-for {
 fieldset.is_applyed_for {
 	float: right;
 	margin-right: 44%;
+}
+input.search-list {
+	margin-left: 2%;
+	margin-bottom: 6px;
+}
+div.button-menu {
+	margin-left: 2%;
+	margin-bottom: 6px;
+}
+#alphabet {
+	text-align: center;
 }
