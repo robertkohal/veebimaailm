@@ -343,6 +343,6 @@ fieldset.is_applyed_for {
 	}
 	table.voting-table, #is_voted_box {
 		width: 100%;
-		margin: 0px;
+		margin: 0px; 
 	}
 }
