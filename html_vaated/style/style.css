@@ -9,7 +9,7 @@ html, body {
 img {
 	border: 0;
 }
-ul {
+ul, p {
 	margin: 0;
 	padding: 0;
 }
@@ -114,4 +114,82 @@ fieldset.apply-for {
 fieldset.is_applyed_for {
 	float: right;
 	margin-right: 44%;
+}
+.clear {
+	clear: both;
+}
+.kkk-questions li {
+	list-style: none;
+}
+.buttons {
+	width: 200px;
+	text-align: center;
+	float: left;
+}
+.buttons ul li {
+	list-style: none;
+	background: yellow;
+	color: #000;
+	cursor: pointer;
+	margin-top: 5px;
+	height: 30px;
+	line-height: 30px;
+}
+.statistics-wrapper {
+	float: left;
+	margin-left: 5px;
+}
+.statistics-wrapper .diagram {
+	border-left: 3px solid #000;
+	border-bottom: 3px solid #000;
+	background: #fff;
+	height: 300px;
+	width: 400px;
+	position: relative;
+	float: left;
+}
+.statistics-wrapper .diagram div {
+	width: 40px;
+	float: left;
+	bottom: 0;
+	position: absolute;
+}
+.statistics-wrapper .eee {
+	height: 100px;
+	background: red;
+	left: 10px;
+}
+.statistics-wrapper .sm {
+	height: 145px;
+	background: #888;
+	left: 60px;
+}
+.statistics-wrapper .ue {
+	height: 254px;
+	background: pink;
+	left: 110px;
+}
+.statistics-wrapper .ve {
+	height: 250px;
+	left: 160px;
+	background: blue;
+}
+.statistics-wrapper .e1 {
+	height: 240px;
+	left: 210px;
+	background: green;
+}
+.statistics-wrapper .e2 {
+	height: 150px;
+	left: 260px;
+	background: skyblue;
+}
+.statistics-wrapper .e3 {
+	height: 259px;
+	left: 310px;
+	background: salmon;
+}
+.statistics-wrapper .result {
+	float: left;
+	margin-left: 10px;
 }
