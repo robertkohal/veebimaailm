@@ -9,7 +9,7 @@ html, body {
 img {
 	border: 0;
 }
-ul, p {
+ul, p, h1, h2, h3, h4, h5, h6 {
 	margin: 0;
 	padding: 0;
 }
@@ -153,6 +153,15 @@ fieldset.is_applyed_for {
 	float: left;
 	bottom: 0;
 	position: absolute;
+	border: 3px solid #000;
+	border-bottom: 0px solid #000;
+	color: #000;
+}
+.statistics-wrapper .diagram div > span {
+	display: block;
+	-webkit-transform: rotate(-90deg); 
+	-moz-transform: rotate(-90deg);	
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
 .statistics-wrapper .eee {
 	height: 100px;
@@ -192,4 +201,148 @@ fieldset.is_applyed_for {
 .statistics-wrapper .result {
 	float: left;
 	margin-left: 10px;
+}
+/* printimise struktuur */
+@media print {
+	#header, #content .buttons, #footer {
+		display: none;
+	}
+}
+@media (max-width: 320px) {
+	#page-wrap {
+		width: 320px;
+	}
+	#content { 
+		background: salmon;
+	}
+	#logo {
+		display: none;
+	}
+	#help {
+		margin-left: 0px;
+	}
+	#login {
+		float: left;
+	}
+	.buttons {
+		width: 100%;
+	}
+	.statistics-wrapper {
+		margin: 0px;
+	}
+	.statistics-wrapper .diagram {
+		width: 320px;
+		border: 0px;
+	}
+	.statistics-wrapper .diagram div {
+		width: 10px;
+	}
+	.statistics-wrapper .eee {
+		height: 100px;
+		background: red;
+		left: 5px;
+	}
+	.statistics-wrapper .sm {
+		height: 145px;
+		background: #888;
+		left: 25px;
+	}
+	.statistics-wrapper .ue {
+		height: 254px;
+		background: pink;
+		left: 45px;
+	}
+	.statistics-wrapper .ve {
+		height: 250px;
+		left: 65px;
+		background: blue;
+	}
+	.statistics-wrapper .e1 {
+		height: 240px;
+		left: 85px;
+		background: green;
+	}
+	.statistics-wrapper .e2 {
+		height: 150px;
+		left: 105px;
+		background: skyblue;
+	}
+	.statistics-wrapper .e3 {
+		height: 259px;
+		left: 125px;
+		background: salmon;
+	}
+	table.voting-table, #is_voted_box {
+		width: 100%;
+		margin: 0px;
+	}
+}
+@media (max-width: 240px) {
+	#page-wrap {
+		width: 240px;
+	}
+	#content { 
+		background: skyblue;
+	}
+	#logo {
+		display: none;
+	}
+	#help {
+		margin-left: 0px;
+	}
+	#login {
+		float: left;
+	}
+	.buttons {
+		width: 100%;
+	}
+	.statistics-wrapper {
+		margin: 0px;
+	}
+	.statistics-wrapper .diagram {
+		width: 240px;
+		border: 0px;
+	}
+	.statistics-wrapper .diagram div {
+		width: 10px;
+	}
+	.statistics-wrapper .eee {
+		height: 100px;
+		background: red;
+		left: 5px;
+	}
+	.statistics-wrapper .sm {
+		height: 145px;
+		background: #888;
+		left: 25px;
+	}
+	.statistics-wrapper .ue {
+		height: 254px;
+		background: pink;
+		left: 45px;
+	}
+	.statistics-wrapper .ve {
+		height: 250px;
+		left: 65px;
+		background: blue;
+	}
+	.statistics-wrapper .e1 {
+		height: 240px;
+		left: 85px;
+		background: green;
+	}
+	.statistics-wrapper .e2 {
+		height: 150px;
+		left: 105px;
+		background: skyblue;
+	}
+	.statistics-wrapper .e3 {
+		height: 259px;
+		left: 125px;
+		background: salmon;
+	}
+	table.voting-table, #is_voted_box {
+		width: 100%;
+		margin: 0px;
+	}
 }
