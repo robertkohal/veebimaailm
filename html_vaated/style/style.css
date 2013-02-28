@@ -107,11 +107,10 @@ table.voting-table td {
 	border: 1px solid black;
 }
 table.voting-table th.name {
-
-	width: 47%;
+	width: 40%;
 }
 table.voting-table th.party {
-	width: 47%;
+	width: 40%;
 }
 table.voting-table th.vote {
 	width: *;

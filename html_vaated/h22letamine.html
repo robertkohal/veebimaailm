@@ -7,7 +7,8 @@
 	<meta name="viewport" content="width=device-width" />
     <title>H‰‰letamine</title>
     <link href="style/style.css" rel="stylesheet" type="text/css" media="all" />
-    <script src="./script/jquery-1.9.1.js"></script> 
+    <script src="./script/jquery-1.9.1.js"></script>
+    <script src="./script/ajax_querys.js"></script>  
     <script> <!--Selleks, et kaasata header faili. -->
         <!-- http://www.attackofdesign.com/using-jquery-to-include-files/ -->
         $(document).ready(function(){
@@ -33,24 +34,25 @@
 	            		<legend>Filtreeri</legend>
 	            		<p>
 	            			<label>Piirkond</label><br/>
-	            			<input type="text" list="districts">
-	            				<datalist id="districts">
-	            					<option>Tartu
-	            					<option>Tallinn
-	            					<option>P‰rnumaa
-	            					<option>Valgamaa
-	            					<option>Pılvamaa
-	            				</datalist>
+	            				<select id="districts" onChange="querydb()">
+	            					<option value="0">-----
+	            					<option value="1">Tartu
+	            					<option value="2">Tallinn
+	            					<option value="3">P‰rnumaa
+	            					<option value="4">Valgamaa
+	            					<option value="5">Pılvamaa
+	            				</select>
 	            			<br/><label>Erakond</label><br/>
-	            			<input type="text" list="politics-party">
-	            				<datalist id="politics-party">
-	            					<option>Eesti Esimene Erakond
-	            					<option>Soliidsed mehed
-	            					<option>Uus Erakond
-	            					<option>Vana Erakond
-	            				</datalist>
+	            				<select id="politics-party" onChange="querydb()">
+	            					<option value="0">-----
+	            					<option value="1">Eesti Esimene Erakond
+	            					<option value="2">Soliidsed mehed
+	            					<option value="3">Uus Erakond
+	            					<option value="4">Vana Erakond
+	            					<option value="5">‹ksik kandidaadid
+	            				</select>
 	            			<br/><label>Kandidaadi nimi</label><br/>
-	            			<input type="search" name="search-candidate" placeholder="Nimi">
+	            			<input type="search" id="search-candidate" placeholder="Nimi"/>
 	            		</p>
 	            	</fieldset>
             	</div>
@@ -60,10 +62,12 @@
 					<tr>
 						<th class="name">Nimi</th>
 						<th class="party">Erakond</th>
+						<!--  <th class="party">Proov</th>-->
 						<th class="vote">H‰‰leta</th>
+						
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="voting-table-body">
 					<tr>
 						<td class="name">Kati Kood
 						</td>
