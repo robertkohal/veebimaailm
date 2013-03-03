@@ -120,6 +120,7 @@ function getDistrictStatistics(element) {
 		});
 	}
 }
+//proov
 function sortStatistics(element) {
 	var uparrow = "&#x25B2";
 	var downarrow = "&#x25BC";
