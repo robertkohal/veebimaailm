@@ -1,31 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=9" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width" />
-	<title>Kandideerimine</title>
-	<link href="style/mobile.css" rel="stylesheet" type="text/css" media="screen and (max-width: 320px)" />
-	<link href="style/style.css" rel="stylesheet" type="text/css" media="screen" />
-    <script src="./script/jquery-1.9.1.js"></script> 
-    <script> <!--Selleks, et kaasata header faili. -->
-        <!-- http://www.attackofdesign.com/using-jquery-to-include-files/ -->
-        $(document).ready(function(){
-            $(".js-include").each(function(){
-                var inc=$(this);
-                $.get(inc.attr("title"), function(data){
-                    inc.replaceWith(data);
-                });
-            });
-        }); 
-    </script>
-</head>
-<body>
-	<div id="page-wrap">
-        <div class="js-include" title="header.html"></div>
-        <div id="content">
         	<h1>Kandideerimine</h1>
         	<fieldset class="is_applyed_for">
            		<div id="is_voted_text">Te ei ole veel kandideerinud.</div>
@@ -39,9 +11,9 @@
 	           				<datalist id="districts">
 	           					<option>Tartu
 	           					<option>Tallinn
-	           					<option>PÃ¤rnumaa
+	           					<option>Pärnumaa
 	           					<option>Valgamaa
-	           					<option>PÃµlvamaa
+	           					<option>Põlvamaa
 	           				</datalist>
 	           		</p>
 	           		<p>
@@ -59,8 +31,3 @@
 	           		</p>
            		 </form>
            	</fieldset>
-        </div>
-        <div id="footer"></div>
-    </div>
-</body>
-</html>
