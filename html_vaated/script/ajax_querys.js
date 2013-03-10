@@ -20,6 +20,7 @@ function querydb() {
 	} else {
 		return;
 	}
+    $("#loading").show();
 	$.getJSON(filename,function(data) {
 		updateTable(data,selection);
 	});
@@ -56,6 +57,7 @@ function updateTable(data,selection) {
 		}
 	}
 	$("#voting-table-body").append(html);
+    $("#loading").hide();
 }
 function generateTHead(selection) {
 	var thead = "";
@@ -87,7 +89,7 @@ switch (selection) {
 function navigation(element) {
 	var index = element.target.href.lastIndexOf("/") + 1;
 	var filename = element.target.href.substr(index);
-
+    $("#loading").show();
 	$.get(filename,function(data,status) {
 		updateContent(data,filename);
 		history.pushState(data, element.target.textContent, element.target.href);
@@ -100,6 +102,7 @@ function updateContent(data, filename) {
 	$("#content").empty();
     if (filename=="index.html") {
         $("#content").append("<img id=\"map\" src=\"images/kontuurkaart.jpg\" alt=\"kaart\" />");
+        $("#loading").hide();
         return;
     }
 	$("#content").append(data);
@@ -111,14 +114,17 @@ function updateContent(data, filename) {
 			} else {
 				return;
 			}
+            $("#loading").show();
 			$.getJSON("candidate.json",function(data) {
 				updateTable(data,selection);
 			});
 		});
         $("#districts").bind("change",querydb);
         $("#politics-party").bind("change",querydb);
+        
 	} else if (filename=="statistika.html") {
 		$.get("diagramm.html",function(data,status) {
+            $("#loading").hide();
 			$(".statistics-wrapper").empty();
 			$(".statistics-wrapper").append(data);
 		});
@@ -127,7 +133,16 @@ function updateContent(data, filename) {
         $("#districts").bind("change",hideSelectionError);
         $("#politics-party").bind("change",hideSelectionError);
         $("#candidate_questionary").submit(valitadeQuestionary);
+        
+	} else if (filename=="nimekiri.html") {
+        var x = "";
+        var str = "ABCDEFGHIJKLMNOPRSŠZŽTUVÕÄÖÜ";
+        for(var i=0; i<str.length; i++)  {
+            x = x +"<a>" + str.charAt(i) +"</a> ";	
+        }
+        document.getElementById("alphabet").innerHTML=x;
 	}
+    $("#loading").hide();
 }
 
 function valitadeQuestionary(event) {
@@ -145,19 +160,40 @@ function valitadeQuestionary(event) {
         event.preventDefault();
         return false;
     } else {
-        var date = new Date();
-        var day = date.getDate();
-        var month = ("0"+(date.getMonth()+1)).slice(-2);
-        var year = date.getFullYear();
-        var apply_for_date = "["+day+"."+month+"."+year+"]";
-        $("#is_voted_text").text("Te olete kandideerinud."+apply_for_date);
-        $(".is_applyed_for").css({"background":"#006600","margin-right":"40%"});
+        var district = $("#districts").find(":selected").text();
+        var politics_party = $("#politics-party").find(":selected").text();
+        $("h1").after("<div id=\"dialog-confirm\"></div>");
+        $("#dialog-confirm").attr("title","Kandideerimine");
+        $("#dialog-confirm").html('Piirkond: '+district+'<br/>Erakond: '+politics_party+'<br/>Kas soovite kandideerida?');
+        $( "#dialog-confirm" ).dialog({
+                                resizable: false,
+                                modal: true,
+                                buttons: { 
+                                    "Jah": function() {
+                                        applyFor();
+                                        $( this ).dialog( "close" );
+                                    },
+                                    "Ei": function() {
+                                        $( this ).dialog( "close" );
+                                    }
+                                }
+                            });
         event.preventDefault();
-        return false;
+        return false;                    
     }
     return true;
     
 }
+function applyFor() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = ("0"+(date.getMonth()+1)).slice(-2);
+    var year = date.getFullYear();
+    var apply_for_date = "["+day+"."+month+"."+year+"]";
+    $("#is_voted_text").text("Te olete kandideerinud."+apply_for_date);
+    $(".is_applyed_for").css({"background":"#006600","margin-right":"40%"});
+}
+
 function hideSelectionError(event) {
     var selectionValue = parseInt($(event.target).find(":selected").val());
     var selectId = $(event.target).attr("id");

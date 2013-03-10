@@ -1,34 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=9" />
-	<link href="style/style.css" rel="stylesheet" type="text/css" media="screen" />
-	<title>Valimisnimekirjad</title>
-	<script src="./script/jquery-1.9.1.js"></script> 
-    <script> <!--Selleks, et kaasata header faili. -->
-        <!-- http://www.attackofdesign.com/using-jquery-to-include-files/ -->
-        $(document).ready(function(){
-            $(".js-include").each(function(){
-                var inc=$(this);
-                $.get(inc.attr("title"), function(data){
-                    inc.replaceWith(data);
-                });
-            });
-            var x = "";
-			var str = "ABCDEFGHIJKLMNOPRSŠZŽTUVÕÄÖÜ";
-			for(var i=0; i<str.length; i++)  {
-				x = x +"<a>" + str.charAt(i) +"</a> ";	
-			}
-			document.getElementById("alphabet").innerHTML=x;
-        }); 
-    </script>
-</head>
-<body>
-<div id="page-wrap">
-	<div class="js-include" title="header.html"></div>
-	<div id="content">
 		<h1>Kandidaadid</h1>
 		<p id="alphabet">
 		</p>
@@ -78,9 +47,3 @@
 		<div class="button-menu">
 			<button>Valimisringkond nr 6</button>
 		</div>
-	</div>
-</div>
-	<div id="footer">
-	</div>
-</body>
-</html>

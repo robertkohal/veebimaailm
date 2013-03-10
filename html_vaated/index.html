@@ -6,7 +6,9 @@
 	<meta name="viewport" content="width=device-width" />
     <title>Avaleht</title>
     <link href="style/style.css" rel="stylesheet" type="text/css" media="all" />
-    <script src="./script/jquery-1.9.1.js"></script> 
+    <link href="/script/jqueryUI/jquery-ui-1.10.1.custom.css" rel="stylesheet" type="text/css" media="all" />
+    <script src="./script/jquery-1.9.1.js"></script>
+    <script src="./script/jqueryUI/jquery-ui-1.10.1.custom.js"></script>
     <script src="./script/ajax_querys.js"></script>
     <script src="./script/header.js"></script>  
 </head>
@@ -14,6 +16,7 @@
 <body>
     <div id="page-wrap">
     <div class="js-include" title="header.html"></div>
+        <div id="loading"><img id="loading_image" src="./images/ajax_loader.gif" alt="veebilehte laaditakse" /><div id="loading_text">Laadin andmeid</div></div>
         <div id="content">
             
         </div>

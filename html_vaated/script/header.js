@@ -19,7 +19,9 @@
                 index = location.href.lastIndexOf("/") + 1;
                 filenameLocation = location.href.substr(index);
                 if (filenameLocation=="index.html" || filenameLocation=="" ) {
-                    $("#content").append("<img id=\"map\" src=\"images/kontuurkaart.jpg\" alt=\"kaart\" />");
+                    if (!$("#map").length) {
+                        $("#content").append("<img id=\"map\" src=\"images/kontuurkaart.jpg\" alt=\"kaart\" />");
+                    }
                     continue;
                 }
                 if (filenameLink==filenameLocation) {
