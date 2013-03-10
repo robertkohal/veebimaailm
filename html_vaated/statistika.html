@@ -1,51 +1,3 @@
-<<<<<<< HEAD
-            <h1>Statistika</h1>
-            <div class="buttons">
-				<ul>
-					<li>K�ik ringkonnad</li>
-					<li>Valimisringkond 1</li>
-					<li>Valimisringkond 2</li>
-					<li>Valimisringkond 3</li>
-					<li>Valimisringkond 4</li>
-					<li id="val5" onclick="getDistrictStatistics(this)">Valimisringkond 5</li>
-					<li>Valimisringkond 6</li>
-					<li>Valimisringkond 7</li>
-					<li>Valimisringkond 8</li>
-				</ul>
-			</div>
-			<div class="statistics-wrapper">
-			</div>
-			<div class="clear"></div>
-
-=======
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=9" />
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width" />
-    <title>Hääletamine</title>
-    <link href="style/style.css" rel="stylesheet" type="text/css" media="all" />
-    <script src="./script/jquery-1.9.1.js"></script> 
-    <script> <!--Selleks, et kaasata header faili. -->
-        <!-- http://www.attackofdesign.com/using-jquery-to-include-files/ -->
-        $(document).ready(function(){
-            $(".js-include").each(function(){
-                var inc=$(this);
-                $.get(inc.attr("title"), function(data){
-                    inc.replaceWith(data);
-                });
-            });
-        }); 
-    </script>
-</head>
-
-<body>
-    <div id="page-wrap">
-        <div class="js-include" title="header.html"></div>
-        
-        <div id="content">
             <h1>Statistika</h1>
             <div class="buttons">
 				<ul>
@@ -54,7 +6,7 @@
 					<li>Valimisringkond 2</li>
 					<li>Valimisringkond 3</li>
 					<li>Valimisringkond 4</li>
-					<li>Valimisringkond 5</li>
+					<li id="val5">Valimisringkond 5</li>
 					<li>Valimisringkond 6</li>
 					<li>Valimisringkond 7</li>
 					<li>Valimisringkond 8</li>
@@ -78,12 +30,3 @@
 				<div class="clear"></div>
 			</div>
 			<div class="clear"></div>
-        </div>
-        
-        <div id="footer">
-        </div>
-    </div>
-</body>
-
-</html> 
->>>>>>> veidi ilusamaks asja

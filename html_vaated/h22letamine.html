@@ -1,26 +1,26 @@
-            <h1>H‰‰letamine</h1>
+            <h1>H√§√§letamine</h1>
             <form>
             	<div id="voting-filter">
 	            	<fieldset>
 	            		<legend>Filtreeri</legend>
 	            		<p>
 	            			<label>Piirkond</label><br/>
-	            				<select id="districts" onChange="querydb()">
-	            					<option value="0">-----
+	            				<select id="districts">
+	            					<option value="0">Vali piirkond
 	            					<option value="1">Tartu
 	            					<option value="2">Tallinn
-	            					<option value="3">P‰rnumaa
+	            					<option value="3">P√§rnumaa
 	            					<option value="4">Valgamaa
-	            					<option value="5">Pılvamaa
+	            					<option value="5">P√µlvamaa
 	            				</select>
 	            			<br/><label>Erakond</label><br/>
-	            				<select id="politics-party" onChange="querydb()">
-	            					<option value="0">-----
+	            				<select id="politics-party">
+	            					<option value="0">Vali erakond
 	            					<option value="1">Eesti Esimene Erakond
 	            					<option value="2">Soliidsed mehed
 	            					<option value="3">Uus Erakond
 	            					<option value="4">Vana Erakond
-	            					<option value="5">‹ksik kandidaadid
+	            					<option value="5">√úksik kandidaadid
 	            				</select>
 	            			<br/><label>Kandidaadi nimi</label><br/>
 	            			<input type="search" id="search-candidate" placeholder="Nimi"/>
@@ -33,8 +33,7 @@
 					<tr>
 						<th class="name">Nimi</th>
 						<th class="party">Erakond</th>
-						<!--  <th class="party">Proov</th>-->
-						<th class="vote">H‰‰leta</th>
+						<th class="vote">H√§√§leta</th>
 						
 					</tr>
 				</thead>
@@ -48,7 +47,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="name">Mati J‰‰
+						<td class="name">Mati J√§√§
 						</td>
 						<td class="party">Soliidsed mehed
 						</td>
@@ -84,7 +83,7 @@
 			<div class="clear"></div>
             <div id="is_voted_box">
             	<fieldset>
-            		<div id="is_voted_text">Te ei ole veel h‰‰letanud.</div>
+            		<div id="is_voted_text">Te ei ole veel h√§√§letanud.</div>
             	</fieldset>
             </div>
 			<div class="clear"></div>

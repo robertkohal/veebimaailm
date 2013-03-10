@@ -64,63 +64,130 @@ switch (selection) {
 	case 1:
 		thead = '<tr><th class="name">Nimi</th>'
 			+ '<th class="party">Erakond</th>'
-			+ '<th class="vote">H‰‰leta</th></tr>';
+			+ '<th class="vote">H√§√§leta</th></tr>';
 		break;
 	case 2:
 		thead = '<tr><th class="name">Nimi</th>'
 			+ '<th class="party">Maakond</th>'
-			+ '<th class="vote">H‰‰leta</th></tr>';
+			+ '<th class="vote">H√§√§leta</th></tr>';
 		break;
 	case 3:
 		thead = '<tr><th class="name">Nimi</th>'
-			+ '<th class="vote">H‰‰leta</th></tr>';
+			+ '<th class="vote">H√§√§leta</th></tr>';
 		break;
 	case 4:
 		thead = '<tr><th class="name">Nimi</th>'
 			+ '<th class="party">Erakond</th>'
 			+ '<th class="party">Maakond</th>'
-			+ '<th class="vote">H‰‰leta</th></tr>';
+			+ '<th class="vote">H√§√§leta</th></tr>';
 		break;
 	}
 	return thead;
 }
 function navigation(element) {
-	var index = element.href.lastIndexOf("/") + 1;
-	var filename = element.href.substr(index);
+	var index = element.target.href.lastIndexOf("/") + 1;
+	var filename = element.target.href.substr(index);
+
 	$.get(filename,function(data,status) {
-		$("#content").empty();
-		$("#content").append(data);
-		if (filename=="h22letamine.html") {
-			$('#search-candidate').keypress(function (e) {
-				if (e.which == 13) {
-					e.preventDefault();
-					var selection=4;
-				} else {
-					return;
-				}
-				$.getJSON("candidate.json",function(data) {
-					updateTable(data,selection);
-				});
-			});
-		} else if (filename=="statistika.html") {
-			$.get("diagramm.html",function(data,status) {
-				$(".statistics-wrapper").empty();
-				$(".statistics-wrapper").append(data);
-			});
-		}
+		updateContent(data,filename);
+		history.pushState(data, element.target.textContent, element.target.href);
 	});
 }
+function updateContent(data, filename) {
+	if (data == null) {
+        return;
+	}
+	$("#content").empty();
+    if (filename=="index.html") {
+        $("#content").append("<img id=\"map\" src=\"images/kontuurkaart.jpg\" alt=\"kaart\" />");
+        return;
+    }
+	$("#content").append(data);
+	if (filename=="h22letamine.html") {
+		$('#search-candidate').keypress(function (e) {
+			if (e.which == 13) {
+				e.preventDefault();
+				var selection=4;
+			} else {
+				return;
+			}
+			$.getJSON("candidate.json",function(data) {
+				updateTable(data,selection);
+			});
+		});
+        $("#districts").bind("change",querydb);
+        $("#politics-party").bind("change",querydb);
+	} else if (filename=="statistika.html") {
+		$.get("diagramm.html",function(data,status) {
+			$(".statistics-wrapper").empty();
+			$(".statistics-wrapper").append(data);
+		});
+        $("#val5").bind("click",getDistrictStatistics);
+    } else if (filename=="kandideerimine.html") {
+        $("#districts").bind("change",hideSelectionError);
+        $("#politics-party").bind("change",hideSelectionError);
+        $("#candidate_questionary").submit(valitadeQuestionary);
+	}
+}
+
+function valitadeQuestionary(event) {
+    var politics_party = parseInt($("#politics-party").val());
+	var districts = parseInt($("#districts").val());
+    
+    if (districts==0) {
+        $("#nodistrictselectederror").show();
+    }
+    if (politics_party==0) {
+        $("#nopartyselectederror").show();
+    }
+    
+    if (politics_party==0 || districts==0) {
+        event.preventDefault();
+        return false;
+    } else {
+        var date = new Date();
+        var day = date.getDate();
+        var month = ("0"+(date.getMonth()+1)).slice(-2);
+        var year = date.getFullYear();
+        var apply_for_date = "["+day+"."+month+"."+year+"]";
+        $("#is_voted_text").text("Te olete kandideerinud."+apply_for_date);
+        $(".is_applyed_for").css({"background":"#006600","margin-right":"40%"});
+        event.preventDefault();
+        return false;
+    }
+    return true;
+    
+}
+function hideSelectionError(event) {
+    var selectionValue = parseInt($(event.target).find(":selected").val());
+    var selectId = $(event.target).attr("id");
+    if (selectionValue!=0) {
+        if (selectId=="districts") {
+            $("#nodistrictselectederror").hide();
+        } else {
+            $("#nopartyselectederror").hide();
+        }  
+    }
+    return false;
+}
+
 function getDistrictStatistics(element) {
-	var districtId = element.id;
+    
+	var districtId = element.target.id;
 	if (districtId=="val5") {
 		$.get("statistika_sort.html",function(data,status) {
 			$(".statistics-wrapper").empty();
 			$(".statistics-wrapper").append(data);
+            $($(".name")[0]).bind("click",sortButtonClick);
+            $($(".vote")[0]).bind("click",sortButtonClick);
 			sortStatistics($(".name")[0]);
 		});
 	}
 }
-//proov
+function sortButtonClick(event) {
+    sortStatistics(event.target);
+	return event.preventDefault();
+}
 function sortStatistics(element) {
 	var uparrow = "&#x25B2";
 	var downarrow = "&#x25BC";
@@ -147,12 +214,14 @@ function sortStatistics(element) {
 	statisticsSortBy = element.className;
 	var rows = $("#voting-table-body tr");
 	if (statisticsSortBy=="vote") {
+        
 		if (statisticsSortByDirection=="down") {
 			rows.sort(reverseNumberColumn);
 		} else {
 			rows.sort(sortNumberColumn);
 		}
 	} else if (statisticsSortBy=="name") {
+        
 		if (statisticsSortByDirection=="down") {
 			rows.sort(reverseNameColumn);
 		} else {
@@ -163,9 +232,10 @@ function sortStatistics(element) {
 	$("#voting-table-body").append(rows);
 }
 function sortNameColumn(a,b) {
-	var LastNameA = $(a).children(".name").text().split(" ").slice(-1)[0];
-	var LastNameB = $(b).children(".name").text().split(" ").slice(-1)[0];
-	if (LastNameA>LastNameB) {
+    
+    var LastNameA = $(a).children(".name").text().split(" ")[1];
+	var LastNameB = $(b).children(".name").text().split(" ")[1];
+    if (LastNameA>LastNameB) {
 		return 1;
 	} else if (LastNameA<LastNameB) {
 		return -1;
@@ -175,8 +245,8 @@ function sortNameColumn(a,b) {
 }
 
 function reverseNameColumn(a,b) {
-	var LastNameA = $(a).children(".name").text().split(" ").slice(-1)[0];
-	var LastNameB = $(b).children(".name").text().split(" ").slice(-1)[0];
+    var LastNameA = $(a).children(".name").text().split(" ")[1];
+	var LastNameB = $(b).children(".name").text().split(" ")[1];
 	if (LastNameA<LastNameB) {
 		return 1;
 	} else if (LastNameA>LastNameB) {

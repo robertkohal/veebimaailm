@@ -1,33 +1,36 @@
-        	<h1>Kandideerimine</h1>
+﻿        	<h1>Kandideerimine</h1>
         	<fieldset class="is_applyed_for">
            		<div id="is_voted_text">Te ei ole veel kandideerinud.</div>
            	</fieldset>
            	<fieldset class="apply-for">
            		<legend>Kandideeri</legend>
-           		<form>
-           			<p>
+           		<form id="candidate_questionary">
+           			<p id="paragraph_districts">
 	           			<label>Piirkond</label><br/>
-	           			<input type="text" list="districts" required="required">
-	           				<datalist id="districts">
-	           					<option>Tartu
-	           					<option>Tallinn
-	           					<option>P�rnumaa
-	           					<option>Valgamaa
-	           					<option>P�lvamaa
-	           				</datalist>
+	           				<select id="districts">
+                                <option value="0">Vali piirkond</option>
+	           					<option value="1">Tartu</option>
+	           					<option value="2">Tallinn</option>
+	           					<option value="3">Pärnumaa</option>
+	           					<option value="4">Valgamaa</option>
+	           					<option value="5">Põlvamaa</option>
+	           				</select>
 	           		</p>
+                    <p id="nodistrictselectederror" class="selectionerror">Määrake piirkond</p>
 	           		<p>
 	           			<label>Erakond</label><br/>
-	           			<input type="text" list="politics-party" required="required">
-	           				<datalist id="politics-party">
-	           					<option>Eesti Esimene Erakond
-            					<option>Soliidsed mehed
-            					<option>Uus Erakond
-            					<option>Vana Erakond
-	           				</datalist>
+	           				<select id="politics-party">
+                                <option value="0">Vali erakond</option>
+	           					<option value="1">Eesti Esimene Erakond</option>
+            					<option value="2">Soliidsed mehed</option>
+            					<option value="3">Uus Erakond</option>
+            					<option value="4">Vana Erakond</option>
+                                <option value="5">Üksikkandidaat</option>
+	           				</select>
 	           		</p>
+                    <p id="nopartyselectederror" class="selectionerror">Määrake erakondlik kuuluvus</p>
 	           		<p>
-	           			<button>Kandideeri</button>
+	           			<button id="submitbutton" type="submit">Kandideeri</button>
 	           		</p>
            		 </form>
            	</fieldset>

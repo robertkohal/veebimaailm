@@ -8509,7 +8509,10 @@ if ( xhrSupported ) {
 					// akin to a jigsaw puzzle, we simply never set it to be sure.
 					// (it can always be set on a per-request basis or even using ajaxSetup)
 					// For same-domain requests, won't change header if already provided.
-					if ( !s.crossDomain && !headers["X-Requested-With"] ) {
+					console.log(s.url);
+                    console.log("**************");
+                    console.log(headers["X-Requested-With"]);
+                    if ( !s.crossDomain && !headers["X-Requested-With"] ) {
 						headers["X-Requested-With"] = "XMLHttpRequest";
 					}
 
