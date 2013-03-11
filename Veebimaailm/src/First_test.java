@@ -33,7 +33,7 @@ public class First_test extends HttpServlet {
 			return;
 		response.getWriter().write(date.toString());
 	}
-
+	//Test
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
