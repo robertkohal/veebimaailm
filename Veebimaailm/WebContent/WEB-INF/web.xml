@@ -10,8 +10,8 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <listener>
-	<description>HibernateListener</description>
-	<listener-class>ee.veebimaailm.listeners.Databaseinit</listener-class>
+    <description>HibernateListener</description>
+    <listener-class>ee.veebimaailm.listeners.Databaseinit</listener-class>
   </listener>
   <resource-ref>
     <description>Veebimaailm database</description>

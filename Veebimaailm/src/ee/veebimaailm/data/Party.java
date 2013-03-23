@@ -1,32 +1,24 @@
 package ee.veebimaailm.data;
 
-
-
 public class Party {
 	
-	private int id_party;
+	private Integer id_party;
 	private String name;
+	private Long votes;
 	
 	public Party() {
 		
 	}
 	
 	public Party(int id, String name) {
+		super();
 		this.id_party = id;
 		this.name = name;
 	}
 	
-	public int getId_party() {
-		return id_party;
-	}
-	public void setId_party(int id_party) {
-		this.id_party = id_party;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
+	public Party(String name, long vote) {
+		super();
 		this.name = name;
+		this.votes = vote;
 	}
-	
 }

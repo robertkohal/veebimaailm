@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import ee.veebimaailm.data.Party;
 import ee.veebimaailm.data.PartyList;
@@ -44,7 +45,7 @@ public class GetPartys extends HttpServlet {
 		
 		DataFetcher datafetcher = null;
 		ArrayList<Party> partyList = null;
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().create();
 		try {
 			datafetcher = new DataFetcher(getServletContext());
 			partyList = datafetcher.getPartys();
@@ -63,7 +64,7 @@ public class GetPartys extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=UTF-8");
+		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().write(jsonresponse);
 	}
 
