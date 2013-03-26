@@ -1,6 +1,6 @@
 package ee.veebimaailm.db;
 
-public class Queries {
+public class FetcherQueries {
 	final protected static String getAllFromRegion = "SELECT * FROM region";
 	
 	final protected static String getAllFromParty = "SELECT * FROM party";
@@ -78,6 +78,9 @@ public class Queries {
 														"FROM candidate,person " +
 														"WHERE person.id_person=candidate.id_person " +
 														"AND candidate.id_candidate=?" ;
-
+	
+	final protected static String isVotedByPerson = "SELECT EXISTS(SELECT 1 FROM vote WHERE id_person=?) as isVoted";
+	
+	final protected static String getVoteTimeStamp = "SELECT vote_time FROM vote WHERE id_person=?";
 
 }

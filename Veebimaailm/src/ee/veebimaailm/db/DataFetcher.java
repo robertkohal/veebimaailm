@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.naming.NamingException;
@@ -17,22 +16,21 @@ import ee.veebimaailm.data.Region;
 
 public class DataFetcher {
 	
-	private Statement dbstatement;
 	private PreparedStatement predbstatement;
 	private ResultSet dbresultset;
 	private Connection dbconnection;
 	
 	public DataFetcher(ServletContext context) throws SQLException, NamingException {
 		dbconnection = ((DataSource)context.getAttribute("datasource")).getConnection();
-		dbstatement = null;
 		predbstatement = null;
 		dbresultset = null;
 	}
 	public ArrayList<Region> getRegions() throws SQLException {
 		ArrayList<Region> regionList = new ArrayList<Region>();
 		
-		dbstatement = dbconnection.createStatement();
-		dbresultset = dbstatement.executeQuery(Queries.getAllFromRegion);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getAllFromRegion);
+		dbresultset = predbstatement.executeQuery();
+		
 		while (dbresultset.next()) {
 			Region selectedRegion = new Region(dbresultset.getInt("id_region"),
 											   dbresultset.getString("name")); 
@@ -44,8 +42,8 @@ public class DataFetcher {
 	public ArrayList<Party> getPartys() throws SQLException {
 		ArrayList<Party> partyList = new ArrayList<Party>();
 		
-		dbstatement = dbconnection.createStatement();
-		dbresultset = dbstatement.executeQuery(Queries.getAllFromParty);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getAllFromParty);
+		dbresultset = predbstatement.executeQuery();
 		
 		while (dbresultset.next()) {
 			Party selectedParty = new Party(dbresultset.getInt("id_party"),
@@ -58,7 +56,7 @@ public class DataFetcher {
 	public ArrayList<Candidate> getCandidatesByLetters(String letters) throws SQLException {
 		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
 		
-		predbstatement = dbconnection.prepareStatement(Queries.getCandidatesByLetters);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getCandidatesByLetters);
 		predbstatement.setString(1, letters+"%");
 		
 		dbresultset = predbstatement.executeQuery();
@@ -70,7 +68,7 @@ public class DataFetcher {
 	public ArrayList<Candidate> getCandidatesByPartyAndRegion(String id_party,String id_region) throws SQLException {
 		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
 		
-		predbstatement = dbconnection.prepareStatement(Queries.getCandidatesByPartyAndRegion);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getCandidatesByPartyAndRegion);
 		predbstatement.setString(1, id_party);
 		predbstatement.setString(2, id_region);
 		
@@ -82,7 +80,7 @@ public class DataFetcher {
 	public ArrayList<Candidate> getCandidatesByParty(String id_party) throws SQLException {
 		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
 		
-		predbstatement = dbconnection.prepareStatement(Queries.getCandidatesByParty);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getCandidatesByParty);
 		predbstatement.setString(1, id_party);
 		
 		dbresultset = predbstatement.executeQuery();
@@ -93,7 +91,7 @@ public class DataFetcher {
 	public ArrayList<Candidate> getCandidatesByRegion(String id_region) throws SQLException {
 		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
 		
-		predbstatement = dbconnection.prepareStatement(Queries.getCandidatesByRegion);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getCandidatesByRegion);
 		predbstatement.setString(1, id_region);
 		
 		dbresultset = predbstatement.executeQuery();
@@ -104,8 +102,8 @@ public class DataFetcher {
 	public ArrayList<Party> getVotesByCountry() throws SQLException {
 		ArrayList<Party> partyList = new ArrayList<Party>();
 		
-		dbstatement = dbconnection.createStatement();
-		dbresultset = dbstatement.executeQuery(Queries.getVotesByCountry);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getVotesByCountry);
+		dbresultset = predbstatement.executeQuery();
 		
 		fillPartyList(partyList);
 		close();
@@ -115,7 +113,7 @@ public class DataFetcher {
 	public ArrayList<Party> getVotesByRegion(String region_id) throws SQLException {
 		ArrayList<Party> partyList = new ArrayList<Party>();
 		
-		predbstatement = dbconnection.prepareStatement(Queries.getVotesByRegion);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getVotesByRegion);
 		predbstatement.setString(1, region_id);
 		
 		dbresultset = predbstatement.executeQuery();
@@ -129,7 +127,7 @@ public class DataFetcher {
 	public ArrayList<Candidate> getVotesByParty(String party_id) throws SQLException {
 		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
 		
-		predbstatement = dbconnection.prepareStatement(Queries.getVotesByParty);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getVotesByParty);
 		predbstatement.setString(1, party_id);
 		
 		dbresultset = predbstatement.executeQuery();
@@ -140,7 +138,7 @@ public class DataFetcher {
 	public ArrayList<Candidate> getVotesByCandidate(String candidate_id) throws SQLException {
 		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
 		
-		predbstatement = dbconnection.prepareStatement(Queries.getVotesByCandidate);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getVotesByCandidate);
 		predbstatement.setString(1, candidate_id);
 		
 		dbresultset = predbstatement.executeQuery();
@@ -148,6 +146,38 @@ public class DataFetcher {
 		close();
 		return candidateList;
 	}
+	
+	public boolean isVotedByPerson(Integer person_id) throws SQLException {
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.isVotedByPerson);
+		predbstatement.setInt(1, person_id);
+		
+		dbresultset = predbstatement.executeQuery();
+		
+		dbresultset.next();
+		int isVoted = dbresultset.getInt("isVoted");
+		if (isVoted==0) {
+			return false;
+		}
+		return true;
+	}
+	
+	public Long getVoteTimeStamp(Integer person_id) throws SQLException {
+		Long VoteTimeStamp;
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.isVotedByPerson);
+		predbstatement.setInt(1, person_id);
+		
+		dbresultset = predbstatement.executeQuery();
+		
+		if (dbresultset.isBeforeFirst() ) {    
+			VoteTimeStamp = new Long(-1);
+		} else {
+			dbresultset.next();
+			VoteTimeStamp = dbresultset.getTimestamp("vote_time").getTime();
+		}
+		close();
+		return VoteTimeStamp;
+	}
+	
 	private void fillCandidateListWithVotes(ArrayList<Candidate> candidateList)
 			throws SQLException {
 		while (dbresultset.next()) {
@@ -175,11 +205,7 @@ public class DataFetcher {
 	}
 	private void close() throws SQLException {
 		dbresultset.close();
-		if (dbstatement!=null) {
-			dbstatement.close();
-		} else if (predbstatement!=null) {
-			predbstatement.close();
-		}
+		predbstatement.close();
 		dbconnection.close();
 	}
 	

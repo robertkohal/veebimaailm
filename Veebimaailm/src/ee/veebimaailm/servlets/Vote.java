@@ -1,0 +1,102 @@
+package ee.veebimaailm.servlets;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.naming.NamingException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
+import ee.veebimaailm.data.VoteAction;
+import ee.veebimaailm.data.VoteResponse;
+import ee.veebimaailm.db.DataFetcher;
+import ee.veebimaailm.db.DataModifier;
+
+/**
+ * Servlet implementation class Vote
+ */
+@WebServlet("/server/Vote")
+public class Vote extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public Vote() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("application/json; charset=UTF-8");
+		Gson gson = new Gson();
+		VoteAction actionrequest = gson.fromJson(request.getReader(), VoteAction.class);
+		Integer person_id = actionrequest.getPerson_id();
+		Integer candidate_id = actionrequest.getCandidate_id();
+		String action = actionrequest.getAction();
+		VoteResponse voteresponse = new VoteResponse();
+		
+		if (action.equals("vote")) {
+			try {
+				
+				DataFetcher datafetcher = new DataFetcher(getServletContext());
+				
+				Boolean isVoted = datafetcher.isVotedByPerson(person_id);
+				if (isVoted.booleanValue()) {
+					voteresponse.setResult("alreadyVoted");
+				} else {
+					Date vote_time = new Date();
+					long timestampToBrowser = vote_time.getTime();
+					
+					SimpleDateFormat mysqlTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					String timestampToMysql = mysqlTimeFormat.format(vote_time);
+					DataModifier datainserter = new DataModifier(getServletContext());
+					
+					int affectedrows = datainserter.insertVote(person_id,candidate_id, timestampToMysql);
+					if (affectedrows==1) {
+						voteresponse.setResult("success");
+						voteresponse.setTimestamp(timestampToBrowser);
+					} else {
+						voteresponse.setResult("failed");
+					}
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NamingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} else if (action.equals("cancel")) {
+			try {
+				DataModifier datainserter = new DataModifier(getServletContext());
+				int affectedrows = datainserter.deleteVote(person_id);
+				if (affectedrows==1) {
+					voteresponse.setResult("success");
+				} else {
+					voteresponse.setResult("alreadyDeleted");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NamingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		response.getWriter().write(gson.toJson(voteresponse));
+		return;
+	}
+}

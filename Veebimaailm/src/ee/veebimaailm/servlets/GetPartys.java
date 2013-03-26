@@ -65,6 +65,7 @@ public class GetPartys extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json; charset=UTF-8");
+		//request.getSession();
 		response.getWriter().write(jsonresponse);
 	}
 
