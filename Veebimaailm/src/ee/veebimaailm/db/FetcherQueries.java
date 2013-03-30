@@ -82,5 +82,18 @@ public class FetcherQueries {
 	final protected static String isVotedByPerson = "SELECT EXISTS(SELECT 1 FROM vote WHERE id_person=?) as isVoted";
 	
 	final protected static String getVoteTimeStamp = "SELECT vote_time FROM vote WHERE id_person=?";
-
+	
+	final protected static String isNameDublicate = "SELECT EXISTS(SELECT * FROM person WHERE CONCAT_WS(' ',first_name,last_name)=?) as nameDublicate";
+	
+	final protected static String isPasswordCorrect = "SELECT EXISTS(" +
+													  "SELECT 1 FROM person " +
+													  "WHERE SHA2(CONCAT(?," +
+													  "(SELECT salt FROM person " +
+													  "WHERE first_name=? AND last_name=?)),512)=" +
+													  "(SELECT password FROM person " +
+													  "WHERE first_name=? AND last_name=?)) AS checkPassword";
+	
+	final protected static String getIDPersonByName = "SELECT id_person FROM person WHERE first_name=? AND last_name=?";
+	
+	final protected static String isNominatedByPerson = "SELECT EXISTS(SELECT 1 FROM candidate WHERE id_person=?) as isNominated";
 }

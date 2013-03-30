@@ -163,7 +163,7 @@ public class DataFetcher {
 	
 	public Long getVoteTimeStamp(Integer person_id) throws SQLException {
 		Long VoteTimeStamp;
-		predbstatement = dbconnection.prepareStatement(FetcherQueries.isVotedByPerson);
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getVoteTimeStamp);
 		predbstatement.setInt(1, person_id);
 		
 		dbresultset = predbstatement.executeQuery();
@@ -176,6 +176,59 @@ public class DataFetcher {
 		}
 		close();
 		return VoteTimeStamp;
+	}
+	public int getIDPersonByName(String first_name, String last_name) throws SQLException {
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getIDPersonByName);
+		predbstatement.setString(1, first_name);
+		predbstatement.setString(2, last_name);
+		
+		dbresultset = predbstatement.executeQuery();
+		dbresultset.next();
+		int id_person = dbresultset.getInt("id_person");
+		return id_person;
+		
+	}
+	public boolean isNameDublicated(String name) throws SQLException {
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.isNameDublicate);
+		predbstatement.setString(1, name);
+		dbresultset = predbstatement.executeQuery();
+		dbresultset.next();
+		int nameexists = dbresultset.getInt("nameDublicate");
+		if (nameexists==1) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	public boolean checkPassword(String password, String last_name, String first_name) throws SQLException {
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.isPasswordCorrect);
+		predbstatement.setString(1, password);
+		predbstatement.setString(2, first_name);
+		predbstatement.setString(3, last_name);
+		predbstatement.setString(4, first_name);
+		predbstatement.setString(5, last_name);
+		dbresultset = predbstatement.executeQuery();
+		dbresultset.next();
+		int nameexists = dbresultset.getInt("checkPassword");
+		if (nameexists==1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public Boolean isNominatedByPerson(Integer person_id) throws SQLException {
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.isNominatedByPerson);
+		predbstatement.setInt(1, person_id);
+		
+		dbresultset = predbstatement.executeQuery();
+		
+		dbresultset.next();
+		int isNominated = dbresultset.getInt("isNominated");
+		if (isNominated==0) {
+			return false;
+		}
+		return true;
 	}
 	
 	private void fillCandidateListWithVotes(ArrayList<Candidate> candidateList)
@@ -208,5 +261,4 @@ public class DataFetcher {
 		predbstatement.close();
 		dbconnection.close();
 	}
-	
 }

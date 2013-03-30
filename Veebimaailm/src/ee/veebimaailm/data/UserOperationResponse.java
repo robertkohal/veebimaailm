@@ -1,13 +1,13 @@
 package ee.veebimaailm.data;
 
-public class VoteResponse {
+public class UserOperationResponse {
 	private String result;
 	private Long timestamp;
 	
-	public VoteResponse() {
+	public UserOperationResponse() {
 		
 	}
-	public VoteResponse(String result) {
+	public UserOperationResponse(String result) {
 		this.result = result;
 	}
 

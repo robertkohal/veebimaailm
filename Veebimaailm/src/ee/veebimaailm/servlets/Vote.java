@@ -11,11 +11,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 
+import ee.veebimaailm.data.LoginResponse;
 import ee.veebimaailm.data.VoteAction;
-import ee.veebimaailm.data.VoteResponse;
+import ee.veebimaailm.data.UserOperationResponse;
 import ee.veebimaailm.db.DataFetcher;
 import ee.veebimaailm.db.DataModifier;
 
@@ -40,11 +42,21 @@ public class Vote extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json; charset=UTF-8");
 		Gson gson = new Gson();
+		
+		HttpSession session = request.getSession(false);
+		
+		if (session==null) {
+			LoginResponse loginresponse = new LoginResponse("fail","Only authorized users.");
+			response.getWriter().write(gson.toJson(loginresponse));
+			return;
+		}
+		
 		VoteAction actionrequest = gson.fromJson(request.getReader(), VoteAction.class);
-		Integer person_id = actionrequest.getPerson_id();
+		UserProfile userprofile = (UserProfile) session.getAttribute("login");
+		Integer person_id = userprofile.getId_person();
 		Integer candidate_id = actionrequest.getCandidate_id();
 		String action = actionrequest.getAction();
-		VoteResponse voteresponse = new VoteResponse();
+		UserOperationResponse voteresponse = new UserOperationResponse();
 		
 		if (action.equals("vote")) {
 			try {
