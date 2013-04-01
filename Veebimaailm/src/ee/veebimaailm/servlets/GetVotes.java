@@ -41,7 +41,7 @@ public class GetVotes extends HttpServlet {
 		
 		String party_id = request.getParameter("party_id");
 		String region_id = request.getParameter("region_id");
-		String candidate_id = request.getParameter("candidate_id");	
+		String letters = request.getParameter("letters");	
 		String jsonresponse;
 		DataFetcher datafetcher = null;
 		
@@ -54,7 +54,7 @@ public class GetVotes extends HttpServlet {
 
 		try {
 			datafetcher = new DataFetcher(getServletContext());
-			if (region_id==null && party_id==null && candidate_id==null) {
+			if (region_id==null && party_id==null && letters==null) {
 				voteslist = datafetcher.getVotesByCountry();
 				list = new PartyList(voteslist);
 			} else if (region_id!=null) {
@@ -63,8 +63,8 @@ public class GetVotes extends HttpServlet {
 			} else if (party_id!=null) {
 				voteslist = datafetcher.getVotesByParty(party_id);
 				list = new CandidateList(voteslist);
-			} else if (candidate_id!=null) {
-				voteslist = datafetcher.getVotesByCandidate(candidate_id);
+			} else if (letters!=null) {
+				voteslist = datafetcher.getVotesByLetters(letters);
 				list = new CandidateList(voteslist);
 			}
 			

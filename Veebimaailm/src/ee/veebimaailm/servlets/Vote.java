@@ -35,6 +35,9 @@ public class Vote extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	doPost(request,response);
+    }
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -42,6 +45,7 @@ public class Vote extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json; charset=UTF-8");
 		Gson gson = new Gson();
+		
 		
 		HttpSession session = request.getSession(false);
 		
@@ -51,12 +55,35 @@ public class Vote extends HttpServlet {
 			return;
 		}
 		
-		VoteAction actionrequest = gson.fromJson(request.getReader(), VoteAction.class);
 		UserProfile userprofile = (UserProfile) session.getAttribute("login");
 		Integer person_id = userprofile.getId_person();
+		UserOperationResponse voteresponse = new UserOperationResponse();
+		
+		if (request.getMethod().equals("GET")) {
+			DataFetcher datafetcher;
+			Boolean isVoted = false;
+			Long timestamp;
+			try {
+				datafetcher = new DataFetcher(getServletContext());
+				isVoted = datafetcher.isVotedByPerson(person_id);
+				if (isVoted.booleanValue()) {
+					voteresponse.setResult("alreadyVoted");
+					datafetcher = new DataFetcher(getServletContext());
+					timestamp = datafetcher.getVoteTimeStamp(person_id);
+					voteresponse.setTimestamp(timestamp);
+				} else {
+					voteresponse.setResult("NotVoted");
+				}
+			} catch (SQLException | NamingException e) {
+				e.printStackTrace();
+			}
+			response.getWriter().write(gson.toJson(voteresponse));
+			return;
+		}
+		VoteAction actionrequest = gson.fromJson(request.getReader(), VoteAction.class);
 		Integer candidate_id = actionrequest.getCandidate_id();
 		String action = actionrequest.getAction();
-		UserOperationResponse voteresponse = new UserOperationResponse();
+		
 		
 		if (action.equals("vote")) {
 			try {

@@ -94,6 +94,10 @@ a, a:visited {
 #map {
 	width: 100%;
 }
+#testrakendus {
+    position: absolute;
+    top: 0;
+}
 #voting-filter {
 	float: left;
 	margin-left: 2%;
@@ -121,6 +125,14 @@ a, a:visited {
 #voting-filter  input, fieldset.apply-for input {
 	padding: 4px;
 	margin-bottom: 5px;
+}
+#loginform {
+	border-style: outset;
+	border-width: 3px;
+	border-color: green;
+	position: absolute;
+	display: none;
+	background: #ffffff;
 }
 fieldset.apply-for button {
 	background: #caeefc;
@@ -160,6 +172,15 @@ table.voting-table th.party {
 }
 table.voting-table th.vote {
 	width: *;
+}
+table.voting-table .candidate_id {
+	display: none;
+}
+table.voting-table p.vote_text {
+	cursor: pointer;
+}
+table.voting-table tr.tbody_tr:hover  td{
+	background: #00ff00;
 }
 h1 {
 	text-align: center;

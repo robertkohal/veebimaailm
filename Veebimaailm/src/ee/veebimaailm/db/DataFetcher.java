@@ -64,6 +64,17 @@ public class DataFetcher {
 		close();
 		return candidateList;
 	}
+	public ArrayList<Candidate> getVotesByLetters(String letters) throws SQLException {
+		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
+		
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getVotesByLetters);
+		predbstatement.setString(1, letters+"%");
+		
+		dbresultset = predbstatement.executeQuery();
+		fillCandidateListWithVotes(candidateList);
+		close();
+		return candidateList;
+	}
 
 	public ArrayList<Candidate> getCandidatesByPartyAndRegion(String id_party,String id_region) throws SQLException {
 		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
@@ -168,12 +179,9 @@ public class DataFetcher {
 		
 		dbresultset = predbstatement.executeQuery();
 		
-		if (dbresultset.isBeforeFirst() ) {    
-			VoteTimeStamp = new Long(-1);
-		} else {
-			dbresultset.next();
-			VoteTimeStamp = dbresultset.getTimestamp("vote_time").getTime();
-		}
+		dbresultset.next();
+		VoteTimeStamp = dbresultset.getTimestamp("vote_time").getTime();
+		
 		close();
 		return VoteTimeStamp;
 	}

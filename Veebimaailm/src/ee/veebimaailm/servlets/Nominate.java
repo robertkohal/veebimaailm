@@ -33,6 +33,10 @@ public class Nominate extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	doPost(request,response);
+    }
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -49,13 +53,32 @@ public class Nominate extends HttpServlet {
 			return;
 		}
 		
-		NominateAction actionrequest = gson.fromJson(request.getReader(), NominateAction.class);
 		UserProfile userprofile = (UserProfile) session.getAttribute("login");
 		Integer person_id = userprofile.getId_person();
+		UserOperationResponse nominateresponse = new UserOperationResponse();
+		
+		if (request.getMethod().equals("GET")) {
+			DataFetcher datafetcher;
+			Boolean isNominated = false;
+			try {
+				datafetcher = new DataFetcher(getServletContext());
+				isNominated = datafetcher.isNominatedByPerson(person_id);
+				if (isNominated.booleanValue()) {
+					nominateresponse.setResult("alreadyNominated");
+				} else {
+					nominateresponse.setResult("NotNominated");
+				}
+			} catch (SQLException | NamingException e) {
+				e.printStackTrace();
+			}
+			response.getWriter().write(gson.toJson(nominateresponse));
+			return;
+		}
+		
+		NominateAction actionrequest = gson.fromJson(request.getReader(), NominateAction.class);
 		Integer party_id = actionrequest.getParty_id();
 		Integer region_id = actionrequest.getRegion_id();
 		String action = actionrequest.getAction();
-		UserOperationResponse nominateresponse = new UserOperationResponse();
 		
 		if (action.equals("nominate")) {
 			try {

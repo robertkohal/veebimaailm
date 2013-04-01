@@ -40,8 +40,19 @@ public class VerifyLogin extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String uuid = UUID.randomUUID().toString();
-		response.getWriter().write(uuid+"\n");
+    	HttpSession session = request.getSession(false);
+    	LoginResponse loginresponse  = null;
+		Gson gson = new Gson();
+		
+		if (session!=null) {
+			UserProfile userprofile = (UserProfile) session.getAttribute("login");
+			loginresponse = new LoginResponse("success",userprofile.getUsername());
+			
+		} else {
+			loginresponse = new LoginResponse("fail","Not logged in.",34);
+		}
+		response.getWriter().write(gson.toJson(loginresponse));
+		return;
 	}
     
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -67,35 +78,42 @@ public class VerifyLogin extends HttpServlet {
 			return;
 		}
 		String key = request.getParameter("key");
-		String username = request.getParameter("username");
+		String username = request.getParameter("username").trim();
 		String password = request.getParameter("password");
-		
 		DataFetcher datafetcher = null;
 		
 		if (logout!=null) {
 			return;
 		}
-	
+		if (username!=null) {
+			if (!username.contains(" ")) {
+				loginresponse = new LoginResponse("fail","Username must contain space.",25);
+				response.getWriter().write(gson.toJson(loginresponse));
+				return;
+			}
+		}
 		if (key!=null) {
 			if (key.length()!=0 && key.equals("somerandomworD633")) {
 				if (username!=null && password!=null) {
+					
+					
 					if (username.length()<8 || password.length()<8) {
-						loginresponse = new LoginResponse("fail","Username or password too short.");
+						loginresponse = new LoginResponse("fail","Username or password too short.",22);
 						response.getWriter().write(gson.toJson(loginresponse));
 						return;
-					}
+					} 
 					try {
 						datafetcher = new DataFetcher(getServletContext());
 						boolean isNameDublicate = datafetcher.isNameDublicated(username);
 						if (isNameDublicate) {
-							loginresponse = new LoginResponse("fail","Name already exists");
+							loginresponse = new LoginResponse("fail","Name already exists",34);
 							response.getWriter().write(gson.toJson(loginresponse));
 							return;
 						}
 						DataModifier datainserter = new DataModifier(getServletContext());
-						String trimed_username = username.trim();
-						String last_name = trimed_username.substring(trimed_username.lastIndexOf(' ')+1);
-						String first_name = trimed_username.substring(0, trimed_username.lastIndexOf(' '));
+						
+						String last_name = username.substring(username.lastIndexOf(' ')+1);
+						String first_name = username.substring(0, username.lastIndexOf(' '));
 						String salt = generateRandomSalt();
 						String saltedpassword = password+salt;
 						
@@ -109,12 +127,15 @@ public class VerifyLogin extends HttpServlet {
 						e.printStackTrace();
 					}
 				}
+			} else {
+				loginresponse = new LoginResponse("fail","Invalide registry key",22);
+				response.getWriter().write(gson.toJson(loginresponse));
+				return;
 			}
 		} else {
 			if (username!=null && password!=null) {
-				String trimed_username = username.trim();
-				String last_name = trimed_username.substring(trimed_username.lastIndexOf(' ')+1);
-				String first_name = trimed_username.substring(0, trimed_username.lastIndexOf(' '));
+				String last_name = username.substring(username.lastIndexOf(' ')+1);
+				String first_name = username.substring(0, username.lastIndexOf(' '));
 				
 				try {
 					datafetcher = new DataFetcher(getServletContext());
@@ -126,7 +147,7 @@ public class VerifyLogin extends HttpServlet {
 						loginresponse = new LoginResponse("success",first_name+" "+last_name);
 						response.getWriter().write(gson.toJson(loginresponse));
 					} else {
-						loginresponse = new LoginResponse("fail","Username or password incorrect.");
+						loginresponse = new LoginResponse("fail","Username or password incorrect.",45);
 						response.getWriter().write(gson.toJson(loginresponse));
 					}
 				} catch (SQLException | NamingException e) {
@@ -134,7 +155,7 @@ public class VerifyLogin extends HttpServlet {
 					e.printStackTrace();
 				}
 			} else {
-				loginresponse = new LoginResponse("fail","Invalide input.");
+				loginresponse = new LoginResponse("fail","Invalide input.",45);
 				response.getWriter().write(gson.toJson(loginresponse));
 			}
 		}

@@ -1,32 +1,33 @@
             <h1>Statistika</h1>
-            <div class="buttons">
-				<ul>
-					<li>Kõik ringkonnad</li>
-					<li>Valimisringkond 1</li>
-					<li>Valimisringkond 2</li>
-					<li>Valimisringkond 3</li>
-					<li>Valimisringkond 4</li>
-					<li id="val5">Valimisringkond 5</li>
-					<li>Valimisringkond 6</li>
-					<li>Valimisringkond 7</li>
-					<li>Valimisringkond 8</li>
-				</ul>
-			</div>
-			<div class="statistics-wrapper">
-				<div class="diagram">
-					<div class="eee"><span>Eesti esimene erakond</span></div>
-					<div class="sm"><span>Sotsiaalide maa</span></div>
-					<div class="ue"><span>Uus erakond</span></div>
-					<div class="ve"><span>Vana erakond</span></div>
-					<div class="e1"><span>Erakond 1</span></div>
-					<div class="e2"><span>Erakond 2</span></div>
-					<div class="e3"><span>Erakond 3</span></div>
-				</div>
-				<div class="result">
-					<h3>Valimisringkond 1</h3>
-					<p>Haabersti, Kristiine, Põhja-Tallinn</p>
-					<p>Hääletanuid kokku 12393</p>
-				</div>
+            <form>
+            	<div id="voting-filter">
+	            	<fieldset>
+	            		<legend>Filtreeri</legend>
+	            		<p>
+	            			<label>Piirkond</label><br/>
+	            				<select id="districts">
+	            				</select>
+	            			<br/><label>Erakond</label><br/>
+	            				<select id="politics-party">
+	            				</select>
+	            			<br/><label>Kandidaadi nimi</label><br/>
+	            			<input type="search" id="search-candidate" placeholder="Nimi"/>
+	            		</p>
+	            	</fieldset>
+            	</div>
+            </form>
+			<table class="voting-table">
+    <thead>
+        <tr>
+            <th class="name">Nimi&#x25B2</th>
+            <th class="party">Erakond</th>
+            <th class="vote">Hääled</th>
+            
+        </tr>
+    </thead>
+    <tbody id="voting-table-body">
+    </tbody>
+</table>
 				<div class="clear"></div>
 			</div>
 			<div class="clear"></div>

@@ -96,4 +96,16 @@ public class FetcherQueries {
 	final protected static String getIDPersonByName = "SELECT id_person FROM person WHERE first_name=? AND last_name=?";
 	
 	final protected static String isNominatedByPerson = "SELECT EXISTS(SELECT 1 FROM candidate WHERE id_person=?) as isNominated";
+	
+	final protected static String getVotesByLetters = "SELECT candidate.id_candidate," +
+			 										  "CONCAT_WS(' ',person.first_name, person.last_name) AS person_name,"+ 
+			 										  "party.name AS party_name, region.name AS region_name,"+
+													  "(SELECT count(*) FROM vote "+ 
+													  "WHERE candidate.id_candidate=vote.id_candidate) AS votes " +
+			 										  "FROM candidate,person,party,region " + 
+			 										  "WHERE candidate.id_person=person.id_person "+  
+			 										  "AND candidate.id_party=party.id_party "+  
+			 										  "AND candidate.id_region=region.id_region "+ 
+			 										  "AND CONCAT_WS(' ',person.last_name,person.first_name) LIKE ? " +  
+			 										  "ORDER BY candidate.id_candidate";
 }

@@ -1,28 +1,38 @@
 var statisticsSortBy = "name";
 var statisticsSortByDirection = "down";
 
-function querydb() {
-	
+function querydb(event) {
+	var url_server;
+	if (event.data.url=="vote") {
+		url_server = "/server/GetCandidates";
+	} else {
+		url_server = "/server/GetVotes";
+	}
+	console.log(event.data.url);
 	var politics_party = parseInt($("#politics-party").val());
 	var districts = parseInt($("#districts").val());
-	var filename;
+	var params;
 	var selection;
 	
 	if (politics_party>=1 && districts>=1) {
 		selection = 3;
-		filename = "findCandidatesByPartyAndRegion.json";
+		params = {"party_id":politics_party,"region_id":districts};
 	} else if (politics_party>=1) {
 		selection = 2;
-		filename = "findCandidatesByParty.json";
+		params = {"party_id":politics_party};
 	} else if (districts>=1) {
 		selection = 1;
-		filename = "findCandidatesByRegion.json";
+		params = {"region_id":districts};
 	} else {
 		return;
 	}
     $("#loading").show();
-	$.getJSON(filename,function(data) {
-		updateTable(data,selection);
+	$.getJSON(url_server,params,function(data) {
+		if (event.data.url=="vote") {
+			updateTable(data,selection);
+		} else {
+			updateStatisticsTable(data,selection);
+		}
 	});
 }
 
@@ -44,20 +54,93 @@ function updateTable(data,selection) {
 		break;
 	}
 	if (selection==4) {
-		html ='<tr><td class="name">' + data.person.name 
-		+ '</td><td class="party">' + data.party.name 
-		+ '</td><td class="party">' + data.region.name
-		+ '</td><td class="vote"></td></tr>'
+		data.candidates.forEach(function(item) {
+			html +='<tr class="tbody_tr"><td class="name">' + item.person_name 
+			+ '</td><td class="party">' + item.party_name 
+			+ '</td><td class="party">' + item.region_name
+			+ '</td><td class="vote"><p class="vote_text" id="vote_'+item.id+'">Hääleta</p>'
+			+ '</td><td class="candidate_id">' + item.id
+			+ '</td></tr>';
+		});
 	} else {
 		for (var i=0;i<data.candidates.length;i++) {
-			html+='<tr><td class="name">' + data.candidates[i].person.name 
+			html+='<tr class="tbody_tr"><td class="name">' + data.candidates[i].person_name 
 				+ ((selection==3)? '' : '</td><td class="party">' 
-				+ ((selection==1)? data.candidates[i].party.name : data.candidates[i].region.name))
-				+ '</td><td class="vote"></td></tr>' 
+				+ ((selection==1)? data.candidates[i].party_name : data.candidates[i].region_name))
+					+ '</td><td class="vote"><p class="vote_text" id="vote_'+data.candidates[i].id+'">Hääleta</p>'
+				+ '</td><td class="candidate_id">' + data.candidates[i].id
+				+ '</td></tr>'; 
 		}
 	}
 	$("#voting-table-body").append(html);
+	for (var i=0;i<data.candidates.length;i++) {
+		var id_p = data.candidates[i].id;
+		$("#vote_"+data.candidates[i].id).click({"id":id_p},function(event) {
+			event.preventDefault();
+			$.post("/server/Vote", JSON.stringify({"action":"vote","candidate_id":event.data.id,"sura":"sfa"}), function(data) {
+				window.location.reload();
+			});
+		});
+	}
     $("#loading").hide();
+}
+function updateStatisticsTable(data,selection) {
+	$(".voting-table tr").remove();
+	var thead = generateStatisticsTHead(selection);
+	$(".voting-table thead").empty();
+	$(".voting-table thead").append(thead);
+	
+	var html = "";
+	
+	switch (selection) {
+	
+	case 3:
+		$(".name").css({"width":"80%"});
+		break;
+	case 4:
+		$(".name").css({"width":"30%"});
+		$(".party").css({"width":"30%"});
+		break;
+	}
+	switch (selection) {
+		case 4:
+			data.candidates.forEach(function(item) {
+				html +='<tr class="tbody_tr"><td class="name">' + item.person_name 
+				+ '</td><td class="vote"><p class="vote_text">'+item.vote+'</p>'
+				+ '</td></tr>';
+			});
+			break;
+			
+		case 3:
+			break;
+		case 2:
+			for (var i=0;i<data.candidates.length;i++) {
+			html+='<tr class="tbody_tr"><td class="name">' + data.candidates[i].person_name 
+				+ '</td><td class="vote">'+data.candidates[i].vote
+				+ '</td></tr>'; 
+			}
+			break;
+		case 1:
+			for (var i=0;i<data.partys.length;i++) {
+			html+='<tr class="tbody_tr"><td class="name">' + data.partys[i].name 
+				+ '</td><td class="vote">'+data.partys[i].votes
+				+ '</td></tr>'; 
+			}
+			break;
+		case 0:
+			for (var i=0;i<data.partys.length;i++) {
+				html+='<tr class="tbody_tr"><td class="name">' + data.partys[i].name 
+					+ '</td><td class="vote">'+data.partys[i].votes
+					+ '</td></tr>';
+			}
+			break;
+		}
+	$("#voting-table-body").append(html);
+	$($(".name")[0]).bind("click",sortButtonClick);
+		
+    $($(".vote")[0]).bind("click",sortButtonClick);
+    sortStatistics($(".name")[0]);
+	$("#loading").hide();
 }
 function generateTHead(selection) {
 	var thead = "";
@@ -66,24 +149,55 @@ switch (selection) {
 	case 1:
 		thead = '<tr><th class="name">Nimi</th>'
 			+ '<th class="party">Erakond</th>'
-			+ '<th class="vote">Hääleta</th></tr>';
+			+ '<th class="vote">Hääleta</th>'
+			+ '<th class="candidate_id"></th></tr>';
 		break;
 	case 2:
 		thead = '<tr><th class="name">Nimi</th>'
 			+ '<th class="party">Maakond</th>'
-			+ '<th class="vote">Hääleta</th></tr>';
+			+ '<th class="vote">Hääleta</th>'
+			+ '<th class="candidate_id"></th></tr>';
 		break;
 	case 3:
 		thead = '<tr><th class="name">Nimi</th>'
-			+ '<th class="vote">Hääleta</th></tr>';
+			+ '<th class="vote">Hääleta</th>'
+			+ '<th class="candidate_id"></th></tr>';
 		break;
 	case 4:
 		thead = '<tr><th class="name">Nimi</th>'
 			+ '<th class="party">Erakond</th>'
 			+ '<th class="party">Maakond</th>'
-			+ '<th class="vote">Hääleta</th></tr>';
+			+ '<th class="vote">Hääleta</th>'
+			+ '<th class="candidate_id"></th></tr>';
 		break;
 	}
+	return thead;
+}
+function generateStatisticsTHead(selection) {
+	var thead = "";
+	if (selection==0) {
+		selection=1;
+	}
+switch (selection) {
+	
+	case 1:
+		thead ='<tr><th class="name">Erakond</th>'
+			+ '<th class="vote">Hääled</th>';
+		break;
+	case 2:
+		thead = '<tr><th class="name">Nimi</th>'
+			+ '<th class="vote">Hääled</th>';
+		break;
+	case 3:
+		thead = '<tr><th class="name">Nimi</th>'
+			+ '<th class="vote">Hääled</th>';
+		break;
+	case 4:
+		thead = '<tr><th class="name">Nimi</th>'
+			+ '<th class="vote">Hääled</th>';
+		break;
+	}
+	
 	return thead;
 }
 function navigation(element) {
@@ -96,43 +210,154 @@ function navigation(element) {
 	});
 }
 function updateContent(data, filename) {
+	
 	if (data == null) {
         return;
 	}
+	
 	$("#content").empty();
     if (filename=="index.html") {
         $("#content").append("<img id=\"map\" src=\"images/kontuurkaart.jpg\" alt=\"kaart\" />");
         $("#loading").hide();
         return;
-    }
+    } else if (filename=="h22letamine.html" || filename=="kandideerimine.html") {
+		var loggedin = false;
+		jQuery.ajaxSetup({async:false});
+		$.getJSON("/server/VerifyLogin",function(data) {
+			if (data.result=="success") {
+				loggedin = true;
+			} else {
+				loggedin = false;
+			}
+		});
+		jQuery.ajaxSetup({async:true});
+		if (loggedin==false) {
+			$("#content").append("<b> Ainult autentinud kasutajatele</b>");
+			$("#loading").hide();
+			return;
+		}
+	}
 	$("#content").append(data);
+	if (filename=="h22letamine.html" || filename=="kandideerimine.html" || filename=="statistika.html") {
+		$.getJSON("/server/GetRegions",function(data) {
+			$("#districts").empty();
+			$('#districts').append(new Option('Vali piirkond',0));
+			data.regions.forEach(function(item) {
+				$('#districts').append(new Option(item['name'],item['id_region']));
+			});
+		});
+		$.getJSON("/server/GetPartys",function(data) {
+			$("#politics-party").empty();
+			$('#politics-party').append(new Option('Vali erakond',0));
+			data.partys.forEach(function(item) {
+				$('#politics-party').append(new Option(item['name'],item['id_party']));
+			});
+		});
+	}
 	if (filename=="h22letamine.html") {
 		$('#search-candidate').keypress(function (e) {
 			if (e.which == 13) {
 				e.preventDefault();
-				var selection=4;
+			}
+			return;
+		});
+
+		$('#search-candidate').keyup(function (e) {
+			clearTimeout($.data(this, 'timer'));
+			if (e.keyCode == 13) {
+				search_h(true);
 			} else {
+				$(this).data('timer', setTimeout(search_h, 500));
+			}
+		});
+		function search_h(force) {
+			var existingString = $("#search-candidate").val();
+			if (!force && existingString.length < 2) {
 				return;
 			}
-            $("#loading").show();
-			$.getJSON("candidate.json",function(data) {
+			var selection=4;
+			$.getJSON('/server/GetCandidates',{"letters":existingString}, function(data) {
 				updateTable(data,selection);
 			});
+		}
+        $("#districts").bind("change",{url:"vote"},querydb);
+        $("#politics-party").bind("change",{url:"vote"},querydb);
+		
+		$.getJSON('/server/Vote', function(data) {
+			$("#is_voted_text").empty();
+			if (data.result=="alreadyVoted") {
+				var date = new Date(data.timestamp);
+				var day = date.getDate();
+				var month = ("0"+(date.getMonth()+1)).slice(-2);
+				var year = date.getFullYear();
+				var vote_for_date = "["+day+"."+month+"."+year+"]";
+				$("#is_voted_text").html("Te olete juba hääletanud."+vote_for_date+"<br/><br/><a href='h22letamine.html' id='cancel_vote'>Tühista hääl</a>");
+				$(".is_voted_for").css({"background":"#006600"});
+				$("#cancel_vote").click(function(event) {
+					event.preventDefault();
+					$.post("/server/Vote", JSON.stringify({"action":"cancel"}), function(data) {
+						window.location.reload();
+					});
+				});
+			} else {
+				$(".is_voted_for").css({"background":"#ff7b2b"});
+				$("#is_voted_text").html("Te ei ole veel hääletanud.");
+			}
 		});
-        $("#districts").bind("change",querydb);
-        $("#politics-party").bind("change",querydb);
         
 	} else if (filename=="statistika.html") {
-		$.get("diagramm.html",function(data,status) {
-            $("#loading").hide();
-			$(".statistics-wrapper").empty();
-			$(".statistics-wrapper").append(data);
+		$('#search-candidate').keypress(function (e) {
+			if (e.which == 13) {
+				e.preventDefault();
+			}
+			return;
 		});
-        $("#val5").bind("click",getDistrictStatistics);
+
+		$('#search-candidate').keyup(function (e) {
+			clearTimeout($.data(this, 'timer'));
+			if (e.keyCode == 13) {
+				search(true);
+			} else {
+				$(this).data('timer', setTimeout(search, 500));
+			}
+		});
+		function search(force) {
+			var existingString = $("#search-candidate").val();
+			if (!force && existingString.length < 2) {
+				return;
+			}
+			var selection=4;
+			$.getJSON('/server/GetVotes',{"letters":existingString}, function(data) {
+				updateStatisticsTable(data,selection);
+			});
+		}
+		$("#districts").bind("change",{url:"random"},querydb);
+        $("#politics-party").bind("change",{url:"random"},querydb);
+		$.getJSON('/server/GetVotes', function(data) {
+			selection = 0;
+			updateStatisticsTable(data,selection);
+		});
     } else if (filename=="kandideerimine.html") {
         $("#districts").bind("change",hideSelectionError);
         $("#politics-party").bind("change",hideSelectionError);
         $("#candidate_questionary").submit(valitadeQuestionary);
+		
+		$.getJSON('/server/Nominate', function(data) {
+			$("#is_voted_text").empty();
+			if (data.result=="alreadyNominated") {
+				$("#is_voted_text").html("Te olete kandideerinud.<br/><br/><a href='kandideerimine.html' id='cancel_nominate'>Tühista kandideerimine</a>");
+				$(".is_applyed_for").css({"background":"#006600","margin-right":"50%"});
+				$("#cancel_nominate").click(function(event) {
+					event.preventDefault();
+					$.post("/server/Nominate", JSON.stringify({"action":"cancel"}), function(data) {
+						window.location.reload();
+					});
+				});
+			} else {
+				$(".is_voted_for").css({"background":"#ff7b2b"});
+				$("#is_voted_text").html("Te ei ole veel kandideerinud.");
+			}
+		});
         
 	} else if (filename=="nimekiri.html") {
         var x = "";
@@ -146,17 +371,17 @@ function updateContent(data, filename) {
 }
 
 function valitadeQuestionary(event) {
-    var politics_party = parseInt($("#politics-party").val());
-	var districts = parseInt($("#districts").val());
+    var party_id = parseInt($("#politics-party").val());
+	var region_id = parseInt($("#districts").val());
     
-    if (districts==0) {
+    if (region_id==0) {
         $("#nodistrictselectederror").show();
     }
-    if (politics_party==0) {
+    if (party_id==0) {
         $("#nopartyselectederror").show();
     }
     
-    if (politics_party==0 || districts==0) {
+    if (party_id==0 || region_id==0) {
         event.preventDefault();
         return false;
     } else {
@@ -165,12 +390,12 @@ function valitadeQuestionary(event) {
         $("h1").after("<div id=\"dialog-confirm\"></div>");
         $("#dialog-confirm").attr("title","Kandideerimine");
         $("#dialog-confirm").html('Piirkond: '+district+'<br/>Erakond: '+politics_party+'<br/>Kas soovite kandideerida?');
-        $( "#dialog-confirm" ).dialog({
+        $("#dialog-confirm" ).dialog({
                                 resizable: false,
                                 modal: true,
                                 buttons: { 
                                     "Jah": function() {
-                                        applyFor();
+                                        applyFor(party_id,region_id);
                                         $( this ).dialog( "close" );
                                     },
                                     "Ei": function() {
@@ -178,20 +403,16 @@ function valitadeQuestionary(event) {
                                     }
                                 }
                             });
-        event.preventDefault();
         return false;                    
     }
-    return true;
-    
+    return true; 
 }
-function applyFor() {
-    var date = new Date();
-    var day = date.getDate();
-    var month = ("0"+(date.getMonth()+1)).slice(-2);
-    var year = date.getFullYear();
-    var apply_for_date = "["+day+"."+month+"."+year+"]";
-    $("#is_voted_text").text("Te olete kandideerinud."+apply_for_date);
-    $(".is_applyed_for").css({"background":"#006600","margin-right":"40%"});
+function applyFor(party_id,region_id) {
+	$.post("/server/Nominate", JSON.stringify({"action":"nominate","region_id":region_id,"party_id":party_id}), function(data) {
+		if (data.result=="success") {
+			window.location.reload();
+		} 
+	});
 }
 
 function hideSelectionError(event) {
@@ -256,7 +477,7 @@ function sortStatistics(element) {
 		} else {
 			rows.sort(sortNumberColumn);
 		}
-	} else if (statisticsSortBy=="name") {
+	} else if (statisticsSortBy=="name" || statisticsSortBy=="party") {
         
 		if (statisticsSortByDirection=="down") {
 			rows.sort(reverseNameColumn);
