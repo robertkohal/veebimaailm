@@ -1,9 +1,8 @@
 package ee.veebimaailm.servlets;
 
 import java.io.IOException;
-import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -22,7 +21,7 @@ import ee.veebimaailm.db.DataModifier;
 /**
  * Servlet implementation class VertifyLogin
  */
-@WebServlet("/server/VerifyLogin")
+@WebServlet("/server/private/VerifyLogin")
 public class VerifyLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -61,6 +60,7 @@ public class VerifyLogin extends HttpServlet {
 		HttpSession session = request.getSession(false);	
 		LoginResponse loginresponse  = null;
 		Gson gson = new Gson();
+		String[] userinfo = null;
 		//
 		String logout = request.getParameter("logout");
 		
@@ -77,103 +77,64 @@ public class VerifyLogin extends HttpServlet {
 			response.getWriter().write(gson.toJson(loginresponse));
 			return;
 		}
-		String key = request.getParameter("key");
-		String username = request.getParameter("username").trim();
-		String password = request.getParameter("password");
+		X509Certificate cert = extractCertificate(request);
+		if (cert==null) {
+			response.getWriter().write("Serti ei ole");
+			return;
+		} else {
+			String certinfo = cert.getSubjectX500Principal().getName("RFC1779");
+			userinfo = parseCertInfo(certinfo);
+		}
+		long SSN = Long.parseLong(userinfo[0]);
+		String first_name = userinfo[1];
+		String last_name = userinfo[2];
+		String parameter_login = request.getParameter("login");
 		DataFetcher datafetcher = null;
 		
 		if (logout!=null) {
 			return;
 		}
-		if (username!=null) {
-			if (!username.contains(" ")) {
-				loginresponse = new LoginResponse("fail","Username must contain space.",25);
-				response.getWriter().write(gson.toJson(loginresponse));
-				return;
-			}
-		}
-		if (key!=null) {
-			if (key.length()!=0 && key.equals("somerandomworD633")) {
-				if (username!=null && password!=null) {
-					
-					
-					if (username.length()<8 || password.length()<8) {
-						loginresponse = new LoginResponse("fail","Username or password too short.",22);
-						response.getWriter().write(gson.toJson(loginresponse));
-						return;
-					} 
-					try {
-						datafetcher = new DataFetcher(getServletContext());
-						boolean isNameDublicate = datafetcher.isNameDublicated(username);
-						if (isNameDublicate) {
-							loginresponse = new LoginResponse("fail","Name already exists",34);
-							response.getWriter().write(gson.toJson(loginresponse));
-							return;
-						}
-						DataModifier datainserter = new DataModifier(getServletContext());
-						
-						String last_name = username.substring(username.lastIndexOf(' ')+1);
-						String first_name = username.substring(0, username.lastIndexOf(' '));
-						String salt = generateRandomSalt();
-						String saltedpassword = password+salt;
-						
-						int id_person = datainserter.insertPerson(first_name, last_name, saltedpassword, salt);
-						createSession(session, last_name, first_name, id_person, request);
-						loginresponse = new LoginResponse("success",first_name+" "+last_name);
-						
-						response.getWriter().write(gson.toJson(loginresponse));
-					} catch (SQLException | NamingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+		try {
+			if (parameter_login!=null) {
+				datafetcher = new DataFetcher(getServletContext());
+				int id_person = datafetcher.checkUserExists(SSN);
+				if (id_person==-1) {
+					DataModifier datainserter = new DataModifier(getServletContext());
+					id_person = datainserter.insertPerson(first_name, last_name, SSN);
 				}
-			} else {
-				loginresponse = new LoginResponse("fail","Invalide registry key",22);
-				response.getWriter().write(gson.toJson(loginresponse));
-				return;
-			}
-		} else {
-			if (username!=null && password!=null) {
-				String last_name = username.substring(username.lastIndexOf(' ')+1);
-				String first_name = username.substring(0, username.lastIndexOf(' '));
-				
-				try {
-					datafetcher = new DataFetcher(getServletContext());
-					boolean passwordCorrect = datafetcher.checkPassword(password, last_name, first_name);
-					if (passwordCorrect) {
-						int id_person = datafetcher.getIDPersonByName(first_name, last_name);
-						createSession(session, last_name, first_name, id_person, request);
-						
-						loginresponse = new LoginResponse("success",first_name+" "+last_name);
-						response.getWriter().write(gson.toJson(loginresponse));
-					} else {
-						loginresponse = new LoginResponse("fail","Username or password incorrect.",45);
-						response.getWriter().write(gson.toJson(loginresponse));
-					}
-				} catch (SQLException | NamingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				createSession(session, last_name, first_name, id_person, request);
+				loginresponse = new LoginResponse("success",first_name+" "+last_name);
 			} else {
 				loginresponse = new LoginResponse("fail","Invalide input.",45);
-				response.getWriter().write(gson.toJson(loginresponse));
 			}
+			response.getWriter().write(gson.toJson(loginresponse));
+		} catch (SQLException | NamingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 		}
 	}
 
 	private void createSession(HttpSession session, String last_name,
 			String first_name, int id_person, HttpServletRequest request) throws SQLException, NamingException {
 		session = request.getSession();
-		UserProfile user = new UserProfile(id_person,first_name+" "+last_name);
+		UserProfile user = new UserProfile(id_person,first_name+" "+last_name,0);
 		session.setAttribute("login", user);
 	}
-	public String generateRandomSalt() {
-		SecureRandom random = new SecureRandom();
-		StringBuffer salt = new StringBuffer();
-		for (int i=0;i<32;i++) {
-			char symbol = (char)(random.nextInt(93)+33);
-			salt.append(symbol);
-		}
-		return salt.toString();
+	private String[] parseCertInfo(String cert) {
+		String[] formated_userinfo = new String[3];
+		String[] userinfo = cert.split("[=,]+");
+		formated_userinfo[0] = userinfo[1];
+		formated_userinfo[1] = userinfo[3];
+		formated_userinfo[2] = userinfo[5];
+	
+		return formated_userinfo;
+	}
+	private X509Certificate extractCertificate(HttpServletRequest req) {
+	    X509Certificate[] certs = (X509Certificate[]) req.getAttribute("javax.servlet.request.X509Certificate");
+	    if (null != certs && certs.length > 0) {
+	        return certs[0];
+	    }
+	    return null;
+	    //throw new RuntimeException("No X.509 client certificate found in request");
 	}
 }

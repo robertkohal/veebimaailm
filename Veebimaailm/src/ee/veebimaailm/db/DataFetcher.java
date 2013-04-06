@@ -146,6 +146,18 @@ public class DataFetcher {
 		close();
 		return candidateList;
 	}
+	public ArrayList<Candidate> getVotesByPartyAndRegion(String party_id, String region_id) throws SQLException {
+		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
+		
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getVotesByPartyAndRegion);
+		predbstatement.setString(1, party_id);
+		predbstatement.setString(2, region_id);
+		
+		dbresultset = predbstatement.executeQuery();
+		fillCandidateListWithVotes(candidateList);
+		close();
+		return candidateList;
+	}
 	public ArrayList<Candidate> getVotesByCandidate(String candidate_id) throws SQLException {
 		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
 		
@@ -193,21 +205,20 @@ public class DataFetcher {
 		dbresultset = predbstatement.executeQuery();
 		dbresultset.next();
 		int id_person = dbresultset.getInt("id_person");
+		close();
 		return id_person;
 		
 	}
-	public boolean isNameDublicated(String name) throws SQLException {
-		predbstatement = dbconnection.prepareStatement(FetcherQueries.isNameDublicate);
-		predbstatement.setString(1, name);
+	public int checkUserExists(long ssn) throws SQLException {
+		int id_person = -1;
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.checkUserExists);
+		predbstatement.setLong(1, ssn);
 		dbresultset = predbstatement.executeQuery();
-		dbresultset.next();
-		int nameexists = dbresultset.getInt("nameDublicate");
-		if (nameexists==1) {
-			return true;
-		} else {
-			return false;
+		if (dbresultset.next()) {
+			id_person = dbresultset.getInt("id_person");	
 		}
-		
+		close();
+		return id_person;
 	}
 	public boolean checkPassword(String password, String last_name, String first_name) throws SQLException {
 		predbstatement = dbconnection.prepareStatement(FetcherQueries.isPasswordCorrect);
@@ -219,6 +230,7 @@ public class DataFetcher {
 		dbresultset = predbstatement.executeQuery();
 		dbresultset.next();
 		int nameexists = dbresultset.getInt("checkPassword");
+		close();
 		if (nameexists==1) {
 			return true;
 		} else {
@@ -233,6 +245,7 @@ public class DataFetcher {
 		
 		dbresultset.next();
 		int isNominated = dbresultset.getInt("isNominated");
+		close();
 		if (isNominated==0) {
 			return false;
 		}

@@ -72,6 +72,14 @@ public class FetcherQueries {
 													"WHERE person.id_person=candidate.id_person " +
 													"AND candidate.id_party=? ORDER BY votes DESC;" ;
 	
+	final protected static String getVotesByPartyAndRegion = "SELECT CONCAT_WS(' ',person.first_name, person.last_name) AS person_name, " +
+															 "(SELECT count(*) FROM vote " +
+															 "WHERE candidate.id_candidate=vote.id_candidate) AS votes " +
+															 "FROM candidate,person " +
+															 "WHERE person.id_person=candidate.id_person " +
+															 "AND candidate.id_party=? " +
+															 "AND candidate.id_region=? ORDER BY votes DESC;" ;
+	
 	final protected static String getVotesByCandidate = "SELECT CONCAT_WS(' ',person.first_name, person.last_name) AS person_name, " +
 														"(SELECT count(*) FROM vote " +
 														"WHERE candidate.id_candidate=vote.id_candidate) AS votes " +
@@ -83,7 +91,7 @@ public class FetcherQueries {
 	
 	final protected static String getVoteTimeStamp = "SELECT vote_time FROM vote WHERE id_person=?";
 	
-	final protected static String isNameDublicate = "SELECT EXISTS(SELECT * FROM person WHERE CONCAT_WS(' ',first_name,last_name)=?) as nameDublicate";
+	final protected static String checkUserExists = "SELECT id_person FROM person WHERE ssn=?";
 	
 	final protected static String isPasswordCorrect = "SELECT EXISTS(" +
 													  "SELECT 1 FROM person " +

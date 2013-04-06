@@ -57,6 +57,9 @@ public class GetVotes extends HttpServlet {
 			if (region_id==null && party_id==null && letters==null) {
 				voteslist = datafetcher.getVotesByCountry();
 				list = new PartyList(voteslist);
+			} else if (region_id!=null && party_id!=null) {
+				voteslist = datafetcher.getVotesByPartyAndRegion(party_id,region_id);
+				list = new CandidateList(voteslist);
 			} else if (region_id!=null) {
 				voteslist = datafetcher.getVotesByRegion(region_id);
 				list = new PartyList(voteslist);
@@ -79,5 +82,6 @@ public class GetVotes extends HttpServlet {
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().write(jsonresponse);
 	}
+	
 
 }

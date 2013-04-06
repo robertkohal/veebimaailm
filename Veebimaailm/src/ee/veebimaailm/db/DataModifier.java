@@ -37,12 +37,11 @@ public class DataModifier {
 		close();
 		return affectedrows;
 	}
-	public int insertPerson(String first_name,String last_name,String saltedpassword, String salt) throws SQLException {
+	public int insertPerson(String first_name,String last_name,long ssn) throws SQLException {
 		predbstatement = dbconnection.prepareStatement(ModifierQueries.insertPerson, Statement.RETURN_GENERATED_KEYS);
 		predbstatement.setString(1, first_name);
 		predbstatement.setString(2, last_name);
-		predbstatement.setString(3, saltedpassword);
-		predbstatement.setString(4, salt);
+		predbstatement.setLong(3, ssn);
 		predbstatement.executeUpdate();
 		
 		ResultSet resultset = predbstatement.getGeneratedKeys();

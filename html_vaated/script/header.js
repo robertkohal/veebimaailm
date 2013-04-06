@@ -1,3 +1,5 @@
+var listeneradded = false;
+var timeout = null;
 $(document).ready(function() {
     $(document).ajaxSend(function (event, request, settings) {
         request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
@@ -14,86 +16,93 @@ $(document).ready(function() {
             var headerLink = document.getElementsByClassName("headerlink");
         	for (var i=0;i<headerLink.length;i++) {
         		$(headerLink[i]).bind("click",linkClicked);
-                var index = $(headerLink[i]).attr("href").lastIndexOf("/") + 1;
-                var filenameLink = $(headerLink[i]).attr("href").substr(index);
-                index = location.href.lastIndexOf("/") + 1;
-                filenameLocation = location.href.substr(index);
-                if (filenameLocation=="index.html" || filenameLocation=="" ) {
+                var link_local_part = $(headerLink[i]).attr("href").split("?");
+                var link_page_name = link_local_part[1].split("=")[1];
+				
+                var current_local_part = location.href.split("?");
+				var current_page_name = current_local_part[1].split("=")[1];
+           
+                /*if (current_page_name=="index") {
                     if (!$("#map").length) {
                         $("#content").append("<img id=\"map\" src=\"images/kontuurkaart.jpg\" alt=\"kaart\" />");
                     }
                     continue;
-                }
-                if (filenameLink==filenameLocation) {
-                    $(headerLink[i]).trigger("click");
+                }*/
+				var page_name_with_removed_params = current_page_name.split("&");
+                if (link_page_name==page_name_with_removed_params[0]) {
+                    $(headerLink[i]).trigger("click",location.href);
                 }
         	}
 			generateloginbox();
         });
     });
+	
 	window.addEventListener('popstate', function(event) {
-	console.log('popstate fired!');
-    var filename = event.target.location.href;
-    if (filename!="") {
-         var index = filename.lastIndexOf("/") + 1;
-         filename = filename.substr(index);
-    }
-	updateContent(event.state,filename); 
+		console.log('popstate fired!');
+		var filename = event.target.location.href;
+		var current_local_part = "";
+		if (filename!="") {
+			current_local_part = filename.split("?")[1];
+			filename = getFileNameByPageParam(current_local_part.split(/=|&/)[1]);
+		}
+		updateContent(event.state, filename, current_local_part); 
+		clearTimeout(timeout);
+		timeout = setTimeout(function() {}, 50);
 	});
 });
-function linkClicked(event) {
-	navigation(event);
+
+
+function linkClicked(event,params) {
 	event.preventDefault();
+	if (typeof params!= 'undefined') {
+		event.target.href = params;
+	}
+	navigation(event);
+	
 	return false;
 }
 function generateloginbox() {
-	$("#login").hover(function() {
-		$("#loginform").toggle();
-	});
-	$.getJSON('/server/VerifyLogin', function(data) {
-		$("#logform").empty();
+	if (window.location.protocol!=='https:') {
+		generateNotLogedIn();
+		return;
+	}
+	$.getJSON('/server/private/VerifyLogin', function(data) {
+		$("#login").empty();
 		if (data.result=="success") {
-			var form = '<form action="/server/VerifyLogin" id="loginform" method="post" accept-charset="utf-8">'
-				 + '<div id="namefield" style="text-transform:capitalize;"> Nimi: <b>'+data.username+'</b></div>'
+			var html = '<form action="/server/private/VerifyLogin" id="loginform" method="post" accept-charset="utf-8">'
+				 + '<div id="namefield"> Nimi: <b>'+data.username+'</b></div>'
 				 + '<input type="submit" name="Submit" value="Logi Välja"><br/>' 
 				 + '</form>';
-			$("#logform").append(form);
+			$("#login").append(html);
 			$("#loginform").submit(function(event) {
 				event.preventDefault();
-				$.post("/server/VerifyLogin", { "logout": 5433 }, function(data) {
+				$.post("/server/private/VerifyLogin", { "logout": 5433 }, function(data) {
 					window.location.reload();
 				});
 			});
 		} else {
-			var form = '<form action="/server/VerifyLogin" id="loginform" method="post" accept-charset="utf-8">'
-					 + '<label for="username">Kasutajanimi: </label>'
-					 + '<input type="text" name="username" id="username"/><br/>'
-					 + '<label for="password">Parool: </label>'  
-					 + '<input type="password" name="userpass" id="userpass"/><br/>'
-					 + '<label for="key">Registreerimisvõti: </label>'
-					 + '<input type="text" name="key" id="key"/><br/>'
-					 + '<input type="submit" name="Submit" value="Meldi"><br/>' 
-					 + '</form>';
-			$("#logform").append(form);
-			$("#loginform").submit(function(event) {
-				event.preventDefault();
-				//
-				var username = $("#username").val();
-				var password = $("#userpass").val();
-				var registry_key = $("#key").val();
-				if (registry_key.length==0) {
-					var request = { "username": username, "password": password };		
-				} else {
-					var request = { "username": username, "password": password,"key":registry_key };
-				}
-				$.post("/server/VerifyLogin", request, function(data) {
-					if (data.result=="success") {
-						window.location.reload();
-					} else {
-						alert(data.error_code);
-					}
-				});
-			});
+			generateNotLogedIn();
 		}
 	});
+}
+function generateNotLogedIn() {
+	$("#login").empty();
+	var html = "<p>Logi sisse ID-kaardiga</p>" +
+			   "<a href='#' id='loginlink'>" +
+			   "<img src='images/idkaart.gif' alt='Vajuta siia' /></a>";
+	$("#login").append(html);
+	$("#loginlink").bind("click",login);
+ 
+}
+function login() {
+	var request = { "login": true };	
+	$.post("/server/private/VerifyLogin", request, function(data) {
+		if (data.result=="success") {
+			window.location.reload();
+		} else {
+			alert(data.error_code);
+		}
+	});
+	event.preventDefault();
+	return;
 }

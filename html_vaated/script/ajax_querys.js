@@ -8,21 +8,24 @@ function querydb(event) {
 	} else {
 		url_server = "/server/GetVotes";
 	}
-	console.log(event.data.url);
+
 	var politics_party = parseInt($("#politics-party").val());
 	var districts = parseInt($("#districts").val());
 	var params;
 	var selection;
-	
+	var uriparams = "";
 	if (politics_party>=1 && districts>=1) {
 		selection = 3;
 		params = {"party_id":politics_party,"region_id":districts};
+		uriparams = "&party_id="+politics_party+"&region_id="+districts;
 	} else if (politics_party>=1) {
 		selection = 2;
 		params = {"party_id":politics_party};
+		uriparams = "&party_id="+politics_party
 	} else if (districts>=1) {
 		selection = 1;
 		params = {"region_id":districts};
+		uriparams = "&region_id="+districts;
 	} else {
 		return;
 	}
@@ -33,6 +36,9 @@ function querydb(event) {
 		} else {
 			updateStatisticsTable(data,selection);
 		}
+		var newdata = $("#content").html();
+		var urilocalpart = location.href.split("&");
+		history.pushState(newdata, event.target.textContent,urilocalpart[0]+uriparams);
 	});
 }
 
@@ -77,7 +83,7 @@ function updateTable(data,selection) {
 		var id_p = data.candidates[i].id;
 		$("#vote_"+data.candidates[i].id).click({"id":id_p},function(event) {
 			event.preventDefault();
-			$.post("/server/Vote", JSON.stringify({"action":"vote","candidate_id":event.data.id,"sura":"sfa"}), function(data) {
+			$.post("/server/private/Vote", JSON.stringify({"action":"vote","candidate_id":event.data.id,"sura":"sfa"}), function(data) {
 				window.location.reload();
 			});
 		});
@@ -112,6 +118,11 @@ function updateStatisticsTable(data,selection) {
 			break;
 			
 		case 3:
+			for (var i=0;i<data.candidates.length;i++) {
+				html+='<tr class="tbody_tr"><td class="name">' + data.candidates[i].person_name 
+					+ '</td><td class="vote">'+data.candidates[i].vote
+					+ '</td></tr>'; 
+				}
 			break;
 		case 2:
 			for (var i=0;i<data.candidates.length;i++) {
@@ -201,21 +212,61 @@ switch (selection) {
 	return thead;
 }
 function navigation(element) {
-	var index = element.target.href.lastIndexOf("/") + 1;
-	var filename = element.target.href.substr(index);
+	var params = element.target.href.split("?");
+	var current_page_name = params[1].split(/=|&/)[1];
+	var filename = getFileNameByPageParam(current_page_name);
     $("#loading").show();
 	$.get(filename,function(data,status) {
-		updateContent(data,filename);
-		history.pushState(data, element.target.textContent, element.target.href);
+		var newdata = updateContent(data,filename,params[1]);
+		history.pushState(newdata, element.target.textContent, element.target.href);
 	});
 }
-function updateContent(data, filename) {
+function getFileNameByPageParam(page) {
+	var filename = "";
+	switch (page) {
+		case "index":
+			filename = "index.html";
+			break;
+		case "vote":
+			filename = "h22letamine.html";
+			break;
+		case "nominate":
+			filename = "kandideerimine.html";
+			break;
+		case "list":
+			filename = "nimekiri.html";
+			break;
+		case "statistics":
+			filename = "statistika.html";
+			break;
+	}
+	return filename;
+}
+function updateContent(data, filename, params) {
 	
 	if (data == null) {
-        return;
+		return;
+		
 	}
+	var letters = "";
+	var region_id = "";
+	var party_id = "";
 	
+	var params_array = params.split("&");
+	if (params_array.length>1) {
+		for (var i=0;i<params_array.length;i++) {
+			var index = params_array[i].indexOf("=");
+			if (params_array[i].indexOf("party_id")!=-1) {
+				party_id = params_array[i].substr(index+1);
+			} else if (params_array[i].indexOf("region_id")!=-1) {
+				region_id = params_array[i].substr(index+1);
+			} else if (params_array[i].indexOf("letters")!=-1) {
+				letters = params_array[i].substr(index+1);
+			}
+		}
+	}
 	$("#content").empty();
+	console.log("failinimi "+ filename);
     if (filename=="index.html") {
         $("#content").append("<img id=\"map\" src=\"images/kontuurkaart.jpg\" alt=\"kaart\" />");
         $("#loading").hide();
@@ -223,7 +274,7 @@ function updateContent(data, filename) {
     } else if (filename=="h22letamine.html" || filename=="kandideerimine.html") {
 		var loggedin = false;
 		jQuery.ajaxSetup({async:false});
-		$.getJSON("/server/VerifyLogin",function(data) {
+		$.getJSON("/server/private/VerifyLogin",function(data) {
 			if (data.result=="success") {
 				loggedin = true;
 			} else {
@@ -239,6 +290,7 @@ function updateContent(data, filename) {
 	}
 	$("#content").append(data);
 	if (filename=="h22letamine.html" || filename=="kandideerimine.html" || filename=="statistika.html") {
+		$.ajaxSetup({async: false});
 		$.getJSON("/server/GetRegions",function(data) {
 			$("#districts").empty();
 			$('#districts').append(new Option('Vali piirkond',0));
@@ -253,6 +305,7 @@ function updateContent(data, filename) {
 				$('#politics-party').append(new Option(item['name'],item['id_party']));
 			});
 		});
+		$.ajaxSetup({async: true});
 	}
 	if (filename=="h22letamine.html") {
 		$('#search-candidate').keypress(function (e) {
@@ -283,7 +336,7 @@ function updateContent(data, filename) {
         $("#districts").bind("change",{url:"vote"},querydb);
         $("#politics-party").bind("change",{url:"vote"},querydb);
 		
-		$.getJSON('/server/Vote', function(data) {
+		$.getJSON('/server/private/Vote', function(data) {
 			$("#is_voted_text").empty();
 			if (data.result=="alreadyVoted") {
 				var date = new Date(data.timestamp);
@@ -295,7 +348,7 @@ function updateContent(data, filename) {
 				$(".is_voted_for").css({"background":"#006600"});
 				$("#cancel_vote").click(function(event) {
 					event.preventDefault();
-					$.post("/server/Vote", JSON.stringify({"action":"cancel"}), function(data) {
+					$.post("/server/private/Vote", JSON.stringify({"action":"cancel"}), function(data) {
 						window.location.reload();
 					});
 				});
@@ -333,23 +386,26 @@ function updateContent(data, filename) {
 		}
 		$("#districts").bind("change",{url:"random"},querydb);
         $("#politics-party").bind("change",{url:"random"},querydb);
-		$.getJSON('/server/GetVotes', function(data) {
+		if (party_id=="" && region_id=="" && letters=="") {
+			$.getJSON('/server/GetVotes', function(data) {
 			selection = 0;
 			updateStatisticsTable(data,selection);
 		});
+		}
+		
     } else if (filename=="kandideerimine.html") {
         $("#districts").bind("change",hideSelectionError);
         $("#politics-party").bind("change",hideSelectionError);
         $("#candidate_questionary").submit(valitadeQuestionary);
 		
-		$.getJSON('/server/Nominate', function(data) {
+		$.getJSON('/server/private/Nominate', function(data) {
 			$("#is_voted_text").empty();
 			if (data.result=="alreadyNominated") {
 				$("#is_voted_text").html("Te olete kandideerinud.<br/><br/><a href='kandideerimine.html' id='cancel_nominate'>Tühista kandideerimine</a>");
 				$(".is_applyed_for").css({"background":"#006600","margin-right":"50%"});
 				$("#cancel_nominate").click(function(event) {
 					event.preventDefault();
-					$.post("/server/Nominate", JSON.stringify({"action":"cancel"}), function(data) {
+					$.post("/server/private/Nominate", JSON.stringify({"action":"cancel"}), function(data) {
 						window.location.reload();
 					});
 				});
@@ -367,8 +423,30 @@ function updateContent(data, filename) {
         }
         document.getElementById("alphabet").innerHTML=x;
 	}
+	if (party_id!="") {
+		$("#politics-party").val(party_id);
+	}	
+	if (region_id!="") {
+		$("#districts").val(region_id);
+	}
+	if (letters!="") {
+		$("#search-candidate").val(letters);
+	}
+	
+	if (party_id!="") {
+		$("#politics-party").change();
+	}	
+	 else if (region_id!="") {
+		$("#districts").change();
+	}
+	 else if (letters!="") {
+		$("#search-candidate").keyup();
+	}
+	
     $("#loading").hide();
+	return $("#content").html();
 }
+//function update
 
 function valitadeQuestionary(event) {
     var party_id = parseInt($("#politics-party").val());
@@ -408,7 +486,7 @@ function valitadeQuestionary(event) {
     return true; 
 }
 function applyFor(party_id,region_id) {
-	$.post("/server/Nominate", JSON.stringify({"action":"nominate","region_id":region_id,"party_id":party_id}), function(data) {
+	$.post("/server/private/Nominate", JSON.stringify({"action":"nominate","region_id":region_id,"party_id":party_id}), function(data) {
 		if (data.result=="success") {
 			window.location.reload();
 		} 

@@ -24,7 +24,7 @@ import ee.veebimaailm.db.DataModifier;
 /**
  * Servlet implementation class Vote
  */
-@WebServlet("/server/Vote")
+@WebServlet("/server/private/Vote")
 public class Vote extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

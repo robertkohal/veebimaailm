@@ -22,7 +22,7 @@ import ee.veebimaailm.db.DataModifier;
 /**
  * Servlet implementation class Nominate
  */
-@WebServlet("/server/Nominate")
+@WebServlet("/server/private/Nominate")
 public class Nominate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
