@@ -84,6 +84,7 @@ function updateTable(data,selection) {
 		$("#vote_"+data.candidates[i].id).click({"id":id_p},function(event) {
 			event.preventDefault();
 			$.post("/server/private/Vote", JSON.stringify({"action":"vote","candidate_id":event.data.id,"sura":"sfa"}), function(data) {
+				postToServer();
 				window.location.reload();
 			});
 		});
@@ -192,19 +193,19 @@ function generateStatisticsTHead(selection) {
 switch (selection) {
 	
 	case 1:
-		thead ='<tr><th class="name">Erakond</th>'
+		thead ='<tr><th class="name">Erakond&#x25B2</th>'
 			+ '<th class="vote">Hääled</th>';
 		break;
 	case 2:
-		thead = '<tr><th class="name">Nimi</th>'
+		thead = '<tr><th class="name">Nimi&#x25B2</th>'
 			+ '<th class="vote">Hääled</th>';
 		break;
 	case 3:
-		thead = '<tr><th class="name">Nimi</th>'
+		thead = '<tr><th class="name">Nimi&#x25B2</th>'
 			+ '<th class="vote">Hääled</th>';
 		break;
 	case 4:
-		thead = '<tr><th class="name">Nimi</th>'
+		thead = '<tr><th class="name">Nimi&#x25B2</th>'
 			+ '<th class="vote">Hääled</th>';
 		break;
 	}
@@ -272,6 +273,10 @@ function updateContent(data, filename, params) {
         $("#loading").hide();
         return;
     } else if (filename=="h22letamine.html" || filename=="kandideerimine.html") {
+		var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
+		ws.onopen = function(){
+		};
+		
 		var loggedin = false;
 		jQuery.ajaxSetup({async:false});
 		$.getJSON("/server/private/VerifyLogin",function(data) {
@@ -349,6 +354,7 @@ function updateContent(data, filename, params) {
 				$("#cancel_vote").click(function(event) {
 					event.preventDefault();
 					$.post("/server/private/Vote", JSON.stringify({"action":"cancel"}), function(data) {
+						postToServer();
 						window.location.reload();
 					});
 				});
@@ -382,6 +388,10 @@ function updateContent(data, filename, params) {
 			var selection=4;
 			$.getJSON('/server/GetVotes',{"letters":existingString}, function(data) {
 				updateStatisticsTable(data,selection);
+				var newdata = $("#content").html();
+				var urilocalpart = location.href.split("&");
+				uriparams = "&letters="+existingString;
+				history.pushState(newdata, event.target.textContent,urilocalpart[0]+uriparams);
 			});
 		}
 		$("#districts").bind("change",{url:"random"},querydb);
@@ -392,6 +402,14 @@ function updateContent(data, filename, params) {
 			updateStatisticsTable(data,selection);
 		});
 		}
+		var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
+		ws.onopen = function(){
+		};
+		ws.onmessage = function(message){
+			alert("update");
+
+			$("#politics-party").change();
+		};
 		
     } else if (filename=="kandideerimine.html") {
         $("#districts").bind("change",hideSelectionError);
@@ -447,6 +465,15 @@ function updateContent(data, filename, params) {
 	return $("#content").html();
 }
 //function update
+
+function postToServer(){
+	var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
+	ws.send("voted");
+}
+function closeConnect(){
+	var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
+	ws.close();
+}
 
 function valitadeQuestionary(event) {
     var party_id = parseInt($("#politics-party").val());
