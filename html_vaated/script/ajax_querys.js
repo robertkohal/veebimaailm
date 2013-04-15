@@ -273,9 +273,9 @@ function updateContent(data, filename, params) {
         $("#loading").hide();
         return;
     } else if (filename=="h22letamine.html" || filename=="kandideerimine.html") {
-		var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
-		ws.onopen = function(){
-		};
+		//var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
+		//ws.onopen = function(){
+		//};
 		
 		var loggedin = false;
 		jQuery.ajaxSetup({async:false});
@@ -468,7 +468,9 @@ function updateContent(data, filename, params) {
 
 function postToServer(){
 	var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
-	ws.send("voted");
+	ws.onopen = function(){
+		ws.send("voted");
+	};
 }
 function closeConnect(){
 	var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
