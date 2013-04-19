@@ -1,0 +1,79 @@
+<project name="Veebimaailm" default="setup" basedir=".">
+    <description>
+        Veebimaailm build file
+    </description>
+	<property name="project.home" value="${basedir}/Veebimaailm" />
+
+	<path id="compile.classpath">
+		<fileset dir="${project.home}/WebContent/WEB-INF/lib">
+			<include name="*.jar"/>
+		</fileset>
+		<fileset dir="${project.home}/jetty/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<target name="setup">
+		<antcall target="start-jetty"/>
+	</target>
+	<target name="init">
+		<mkdir dir="${project.home}/build/classes"/>
+		<mkdir dir="${project.home}/dist" />
+		<mkdir dir="${project.home}/dependencies"/>
+		<unzip src="libs.zip" dest="${project.home}/dependencies/"/>
+	</target>
+	<target name="deploy_dependences" depends="init">
+		<copy todir="${project.home}/WebContent/WEB-INF/lib">
+			<fileset dir="${project.home}/dependencies/lib">
+			</fileset>
+		</copy>
+		<copy todir="${project.home}/WebContent/script" overwrite="true">
+			<fileset dir="${project.home}/dependencies">
+				<include name="*.js" />
+			</fileset>
+		</copy>
+		<copy file="${project.home}/dependencies/header.html" todir="${project.home}/WebContent" overwrite="true" />
+		<copy file="${project.home}/dependencies/jetty-env.xml" todir="${project.home}/WebContent/WEB-INF" overwrite="true" />
+		<copy file="${project.home}/dependencies/start.ini" todir="${project.home}/jetty" overwrite="true" />
+		<copy file="${project.home}/dependencies/lib/mysql-connector.jar" todir="${project.home}/jetty/lib/ext" overwrite="true" />
+	</target>
+	<target name="compile" depends="deploy_dependences" >
+		<javac destdir="${project.home}/build/classes" debug="true" srcdir="${project.home}/src">
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+	<target name="war" depends="compile">
+		<war destfile="${project.home}/dist/root.war" webxml="${project.home}/WebContent/WEB-INF/web.xml">
+			<fileset dir="${project.home}/WebContent"/>
+			<lib dir="${project.home}/WebContent/WEB-INF/lib"/>
+			<classes dir="${project.home}/build/classes"/>
+		</war>
+	</target>
+	<target name="deploy_war" depends="war">
+		<delete includeemptydirs="true">
+			<fileset dir="${project.home}/jetty/webapps" includes="**/*"/>
+		</delete>
+		<copy file="${project.home}/dist/root.war" todir="${project.home}/jetty/webapps" overwrite="true" />
+	</target>
+	<target name="initdb" depends="war">  
+	  <sql driver="com.mysql.jdbc.Driver"
+		   url="jdbc:mysql://localhost:3306/mysql" userid="root" password="">
+		<classpath>
+		  <pathelement path="${project.home}/dependencies/lib/mysql-connector.jar"/>      
+		</classpath>
+		<transaction src="${project.home}/dependencies/veebimaailm.sql"/>
+	  </sql>
+	</target>
+	
+	<target name="start-jetty" depends="initdb">
+        <java jar="${project.home}/jetty/start.jar" dir="${project.home}/jetty"
+              fork="true" spawn="false"/>
+         <sleep seconds="4"/>
+    </target>
+	
+	<target name="clean">
+		<delete dir="${project.home}/dist" />
+		<delete dir="${project.home}/build" />
+		<delete dir="${project.home}/dependencies" />
+	</target>
+	
+</project>
