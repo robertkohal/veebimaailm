@@ -23,4 +23,11 @@ public class Candidate {
 		this.person_name = name;
 		this.vote = vote;
 	}
+	public Candidate(String name, int party_name, int region_name, long vote) {
+		super();
+		this.person_name = name;
+		this.party_name = Integer.toString(party_name);
+		this.region_name = Integer.toString(region_name);
+		this.vote = vote;
+	}
 }

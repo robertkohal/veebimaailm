@@ -35,7 +35,7 @@ public class GetRegions extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		
 		super.init(config);
-		
+		//
 		//String initial = config.getInitParameter("initial");
 		DataFetcher datafetcher = null;
 		ArrayList<Region> regionList = null;

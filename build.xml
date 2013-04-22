@@ -54,7 +54,7 @@
 		</delete>
 		<copy file="${project.home}/dist/root.war" todir="${project.home}/jetty/webapps" overwrite="true" />
 	</target>
-	<target name="initdb" depends="war">  
+	<target name="initdb" depends="deploy_war">  
 	  <sql driver="com.mysql.jdbc.Driver"
 		   url="jdbc:mysql://localhost:3306/mysql" userid="root" password="">
 		<classpath>

@@ -24,6 +24,7 @@ public class DataFetcher {
 		dbconnection = ((DataSource)context.getAttribute("datasource")).getConnection();
 		predbstatement = null;
 		dbresultset = null;
+		//
 	}
 	public ArrayList<Region> getRegions() throws SQLException {
 		ArrayList<Region> regionList = new ArrayList<Region>();
@@ -268,6 +269,15 @@ public class DataFetcher {
 														dbresultset.getString("region_name")); 
 			candidateList.add(selectedCandidate);
         }
+	}private void fillCandidateListAll(ArrayList<Candidate> candidateList)
+			throws SQLException {
+		while (dbresultset.next()) {
+			Candidate selectedCandidate = new Candidate(dbresultset.getString("person_name"),
+														dbresultset.getInt("party_name"),
+														dbresultset.getInt("region_name"),
+														dbresultset.getLong("votes")); ; 
+			candidateList.add(selectedCandidate);
+        }
 	}
 	
 	private void fillPartyList(ArrayList<Party> partyList) throws SQLException {
@@ -281,5 +291,15 @@ public class DataFetcher {
 		dbresultset.close();
 		predbstatement.close();
 		dbconnection.close();
+	}
+	public ArrayList<Candidate> getAllVotes() throws SQLException {
+		ArrayList<Candidate> candidateList = new ArrayList<Candidate>();
+		
+		predbstatement = dbconnection.prepareStatement(FetcherQueries.getAllVotes);
+		
+		dbresultset = predbstatement.executeQuery();
+		fillCandidateListAll(candidateList);
+		close();
+		return candidateList;
 	}
 }

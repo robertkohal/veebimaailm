@@ -77,7 +77,10 @@ function generateloginbox() {
 			$("#loginform").submit(function(event) {
 				event.preventDefault();
 				$.post("/server/private/VerifyLogin", { "logout": 5433 }, function(data) {
-					window.location.reload();
+					if (window.location.protocol!=='http:') {
+						window.location.href = window.location.href.replace("https","http");
+						return;
+					}
 				});
 			});
 		} else {
@@ -85,16 +88,21 @@ function generateloginbox() {
 		}
 	});
 }
+
 function generateNotLogedIn() {
 	$("#login").empty();
 	var html = "<p>Logi sisse ID-kaardiga</p>" +
 			   "<a href='#' id='loginlink'>" +
-			   "<img src='images/idkaart.gif' alt='Vajuta siia' /></a>";
+			   "<img src='images/idkaart.gif' title='Sisse logimiseks tuleb vajutada vähemalt 2 korda ID-kaardi pildil. ID-kaart peab olema juba lugejas. Esimest korda suunatakse https-lehele ning alles teisel korral alles toimub reaalne sisselogimine.' /></a>";
 	$("#login").append(html);
 	$("#loginlink").bind("click",login);
  
 }
 function login() {
+	if (window.location.protocol!=='https:') {
+		window.location.href = window.location.href.replace("http","https");
+		return;
+	}
 	var request = { "login": true };	
 	$.post("/server/private/VerifyLogin", request, function(data) {
 		if (data.result=="success") {
@@ -106,3 +114,17 @@ function login() {
 	event.preventDefault();
 	return;
 }
+if (Modernizr.localstorage) {
+	console.log("toetab local storaget");
+  
+} else {
+  // no native support for HTML5 storage :(
+  // maybe try dojox.storage or a third-party solution
+}
+
+
+		
+
+			
+  
+

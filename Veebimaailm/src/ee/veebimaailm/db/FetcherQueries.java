@@ -116,4 +116,12 @@ public class FetcherQueries {
 			 										  "AND candidate.id_region=region.id_region "+ 
 			 										  "AND CONCAT_WS(' ',person.last_name,person.first_name) LIKE ? " +  
 			 										  "ORDER BY candidate.id_candidate";
+	final protected static String getAllVotes = "SELECT CONCAT_WS(' ',person.first_name, person.last_name) AS person_name, " + 
+			 									"candidate.id_party AS party_name, candidate.id_region AS region_name,"+
+												"(SELECT count(*) FROM vote "+
+												"WHERE candidate.id_candidate=vote.id_candidate) AS votes "+
+												"FROM candidate,person "+ 
+												"WHERE person.id_person=candidate.id_person "+
+												"ORDER BY votes DESC;";
+															
 }

@@ -30,16 +30,36 @@ function querydb(event) {
 		return;
 	}
     $("#loading").show();
-	$.getJSON(url_server,params,function(data) {
-		if (event.data.url=="vote") {
-			updateTable(data,selection);
-		} else {
-			updateStatisticsTable(data,selection);
+	if (navigator.onLine==true) {
+		$.getJSON(url_server,params,function (data) {
+			updateTableContent(data,event, selection,uriparams);
+		});
+	} else {
+		switch (selection) {
+			case 1:
+				var data = JSON.parse(localStorage['region_'+districts]);
+				updateTableContent(data,event, selection, uriparams);
+				break;
+			case 2:
+				var data = JSON.parse(localStorage['party_'+politics_party]);
+				updateTableContent(data,event, selection, uriparams);
+				break;
+			case 3:
+				var data = JSON.parse(localStorage['party_'+politics_party+"_region_"+districts]);
+				updateTableContent(data,event, selection, uriparams);
+				break;
 		}
-		var newdata = $("#content").html();
-		var urilocalpart = location.href.split("&");
-		history.pushState(newdata, event.target.textContent,urilocalpart[0]+uriparams);
-	});
+	}
+}
+function updateTableContent(data, event, selection, uriparams) {
+	if (event.data.url=="vote") {
+			updateTable(data,selection);
+	} else {
+		updateStatisticsTable(data,selection);
+	}
+	var newdata = $("#content").html();
+	var urilocalpart = location.href.split("&");
+	history.pushState(newdata, event.target.textContent,urilocalpart[0]+uriparams);
 }
 
 function updateTable(data,selection) {
@@ -273,9 +293,6 @@ function updateContent(data, filename, params) {
         $("#loading").hide();
         return;
     } else if (filename=="h22letamine.html" || filename=="kandideerimine.html") {
-		//var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
-		//ws.onopen = function(){
-		//};
 		
 		var loggedin = false;
 		jQuery.ajaxSetup({async:false});
@@ -295,22 +312,23 @@ function updateContent(data, filename, params) {
 	}
 	$("#content").append(data);
 	if (filename=="h22letamine.html" || filename=="kandideerimine.html" || filename=="statistika.html") {
-		$.ajaxSetup({async: false});
-		$.getJSON("/server/GetRegions",function(data) {
-			$("#districts").empty();
-			$('#districts').append(new Option('Vali piirkond',0));
-			data.regions.forEach(function(item) {
-				$('#districts').append(new Option(item['name'],item['id_region']));
+		if (navigator.onLine==true) {
+			$.ajaxSetup({async: false});
+			$.getJSON("/server/GetRegions",function(data) {
+				localStorage.setItem("regions",JSON.stringify(data));
+				setRegions(data);
 			});
-		});
-		$.getJSON("/server/GetPartys",function(data) {
-			$("#politics-party").empty();
-			$('#politics-party').append(new Option('Vali erakond',0));
-			data.partys.forEach(function(item) {
-				$('#politics-party').append(new Option(item['name'],item['id_party']));
+			$.getJSON("/server/GetPartys",function(data) {
+				localStorage.setItem("partys",JSON.stringify(data));
+				setPartys(data);
 			});
-		});
-		$.ajaxSetup({async: true});
+			$.ajaxSetup({async: true});
+		} else {
+			var regions = JSON.parse(localStorage['regions']);
+			var partys = JSON.parse(localStorage['partys']);
+			setRegions(regions);
+			setPartys(partys);
+		}
 	}
 	if (filename=="h22letamine.html") {
 		$('#search-candidate').keypress(function (e) {
@@ -365,35 +383,49 @@ function updateContent(data, filename, params) {
 		});
         
 	} else if (filename=="statistika.html") {
-		$('#search-candidate').keypress(function (e) {
-			if (e.which == 13) {
-				e.preventDefault();
+		$('#search-candidate').keypress(function (event) {
+			if (event.which == 13) {
+				event.preventDefault();
 			}
 			return;
 		});
 
-		$('#search-candidate').keyup(function (e) {
+		$('#search-candidate').keyup(function (event) {
 			clearTimeout($.data(this, 'timer'));
-			if (e.keyCode == 13) {
-				search(true);
+			if (event.keyCode == 13) {
+				search(true,event);
 			} else {
-				$(this).data('timer', setTimeout(search, 500));
+				$(this).data('timer', setTimeout(function () {
+					search(false,event);
+				}, 500));
 			}
 		});
-		function search(force) {
+		function search(force,event) {
 			var existingString = $("#search-candidate").val();
 			if (!force && existingString.length < 2) {
 				return;
 			}
 			var selection=4;
-			$.getJSON('/server/GetVotes',{"letters":existingString}, function(data) {
-				updateStatisticsTable(data,selection);
-				var newdata = $("#content").html();
-				var urilocalpart = location.href.split("&");
-				uriparams = "&letters="+existingString;
-				history.pushState(newdata, event.target.textContent,urilocalpart[0]+uriparams);
-			});
-		}
+			if (navigator.onLine==true) {
+				$.getJSON('/server/GetVotes',{"letters":existingString}, function(data) {
+					console.log(event.target.textContent);
+					updateLetterSearch(data,selection,existingString,event);
+				});
+			} else {
+				var data = JSON.parse(localStorage['all_votes']);
+				var candidates = [];
+				var re = new RegExp("^"+existingString,'i');
+				data.candidates.forEach(function(item) { 
+					var name_array =  item['person_name'].split(" ");
+					name_array.unshift(name_array.pop());
+					var shifted_name = name_array.join(" ");
+					if (re.test(shifted_name)) {
+						candidates.push({ "person_name":item['person_name'],"vote":item['vote']});
+					} 
+				});
+				updateLetterSearch({"candidates":candidates},selection,existingString,event);
+			}
+		}//
 		$("#districts").bind("change",{url:"random"},querydb);
         $("#politics-party").bind("change",{url:"random"},querydb);
 		if (party_id=="" && region_id=="" && letters=="") {
@@ -402,14 +434,13 @@ function updateContent(data, filename, params) {
 			updateStatisticsTable(data,selection);
 		});
 		}
-		var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
+		var ws = new WebSocket("ws://veebimaailm.dyndns.info/server/VotesUpdate",'echo-protocol');
 		ws.onopen = function(){
 		};
 		ws.onmessage = function(message){
-			alert("update");
-
 			$("#politics-party").change();
 		};
+		getAllVotes();
 		
     } else if (filename=="kandideerimine.html") {
         $("#districts").bind("change",hideSelectionError);
@@ -424,6 +455,7 @@ function updateContent(data, filename, params) {
 				$("#cancel_nominate").click(function(event) {
 					event.preventDefault();
 					$.post("/server/private/Nominate", JSON.stringify({"action":"cancel"}), function(data) {
+						postToServer();
 						window.location.reload();
 					});
 				});
@@ -464,16 +496,93 @@ function updateContent(data, filename, params) {
     $("#loading").hide();
 	return $("#content").html();
 }
-//function update
+function updateLetterSearch(data,selection,existingString,event) {
+	updateStatisticsTable(data,selection);
+	var newdata = $("#content").html();
+	var urilocalpart = location.href.split("&");
+	uriparams = "&letters="+existingString;
+	history.pushState(newdata, event.target.textContent,urilocalpart[0]+uriparams);
+}
+function setRegions(data) {
+	$("#districts").empty();
+	$('#districts').append(new Option('Vali piirkond',0));
+	data.regions.forEach(function(item) {
+		$('#districts').append(new Option(item['name'],item['id_region']));
+	});
+}
+function setPartys(data) {
+	$("#politics-party").empty();
+	$('#politics-party').append(new Option('Vali erakond',0));
+	data.partys.forEach(function(item) {
+		$('#politics-party').append(new Option(item['name'],item['id_party']));
+	});
+}
+function getAllVotes() {
+	$.getJSON("/server/GetVotes",{"all":45},function (data) {
+		localStorage.setItem("all_votes",JSON.stringify(data));
+		var count_regions = JSON.parse(localStorage['regions']).regions.length;
+		var count_partys = JSON.parse(localStorage['partys']).partys.length;
+		for (var i=1;i<=count_partys;i++) {
+			var candidates = [];
+			data.candidates.forEach(function(item) { 
+				if (parseInt(item['party_name'])==i) {
+					candidates.push({ "person_name":item['person_name'],"vote":item['vote']});
+				} 
+			});
+			localStorage.setItem("party_"+i,JSON.stringify({"candidates":candidates}));
+		}
+		for (var i=1;i<=count_partys;i++) {
+			for (var j=1;j<=count_regions;j++) {
+				var candidates = [];
+				data.candidates.forEach(function(item) { 
+					if (parseInt(item['party_name'])==i && parseInt(item['region_name'])==j) {
+						candidates.push({ "person_name":item['person_name'],"vote":item['vote']});
+					}
+				});
+				localStorage.setItem("party_"+i+"_region_"+j,JSON.stringify({"candidates":candidates}));
+			}	
+		}
+		var partys = []
+		var partys_name = JSON.parse(localStorage['partys']).partys;
+		for (var i=1;i<=count_partys;i++) {
+			var votecount = 0;
+			data.candidates.forEach(function(item) { 
+				if (parseInt(item['party_name'])==i) {
+					votecount+=item['vote'];
+				} 
+			});
+			var party = { "name" : partys_name[i-1].name, "votes": votecount};
+			partys.push(party);
+		}
+		
+		localStorage.setItem("country_statistics",JSON.stringify({"partys":partys}));
+		
+		for (var i=1;i<=count_regions;i++) {
+			var partys = []
+			for (var j=1;j<=count_partys;j++) {
+				var votecount = 0;
+				data.candidates.forEach(function(item) { 
+					if (parseInt(item['party_name'])==j && parseInt(item['region_name'])==i) {
+						votecount+=item['vote'];
+					}
+				});
+				var party = { "name" : partys_name[j-1].name, "votes": votecount};
+				partys.push(party);
+			}
+			localStorage.setItem("region_"+i,JSON.stringify({"partys":partys}));
+		}
+	});
+}
 
 function postToServer(){
-	var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
-	ws.onopen = function(){
-		ws.send("voted");
-	};
+	jQuery.ajaxSetup({async:false});
+	$.post("/server/VotesUpdate",{"action":"vote"},function(data) {
+		return;
+	});
+	jQuery.ajaxSetup({async:true});
 }
 function closeConnect(){
-	var ws = new WebSocket("ws://veebimaailm.dyndns.info:8001",'echo-protocol');
+	var ws = new WebSocket("ws://veebimaailm.dyndns.info/server/VotesUpdate",'echo-protocol');
 	ws.close();
 }
 
@@ -517,6 +626,7 @@ function valitadeQuestionary(event) {
 function applyFor(party_id,region_id) {
 	$.post("/server/private/Nominate", JSON.stringify({"action":"nominate","region_id":region_id,"party_id":party_id}), function(data) {
 		if (data.result=="success") {
+			postToServer();
 			window.location.reload();
 		} 
 	});
