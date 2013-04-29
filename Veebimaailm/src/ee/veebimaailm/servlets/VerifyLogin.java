@@ -83,6 +83,7 @@ public class VerifyLogin extends HttpServlet {
 			return;
 		} else {
 			String certinfo = cert.getSubjectX500Principal().getName("RFC1779");
+			System.out.println(certinfo);
 			userinfo = parseCertInfo(certinfo);
 		}
 		long SSN = Long.parseLong(userinfo[0]);

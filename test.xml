@@ -1,0 +1,60 @@
+<project name="Veebimaailm" default="test" basedir=".">
+    <description>
+        Veebimaailm tests build file
+    </description>
+
+	<path id="compile.classpath">
+		<fileset dir=".">
+			<include name="selenium*/*.jar"/>
+			<include name="selenium*/libs/*.jar"/>
+		</fileset>
+	</path>
+	<path id="test.classpath">
+		<pathelement location="./build/classes" />
+		<fileset dir=".">
+			<include name="selenium*/*.jar"/>
+			<include name="selenium*/libs/*.jar"/>
+		</fileset>
+	</path>
+	<target name="init">
+		<mkdir dir="./build/classes"/>
+		<mkdir dir="./reports"/>
+		<unzip dest=".">
+			<fileset dir=".">
+				<include name="selenium*.zip" />
+			</fileset>
+		</unzip>
+	</target>
+	<target name="compile" depends="init" >
+		<javac destdir="./build/classes" debug="true" srcdir="./tests/src" encoding="UTF-8">
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+	<target name="test" depends="compile">
+		<junit fork="yes" printsummary="yes" haltonfailure="no">
+			<formatter type="xml" />
+			<classpath refid="test.classpath" />
+			<batchtest fork="yes" todir="./reports" >
+				<fileset dir="./build/classes">
+					<include name="**/*.class" />
+				</fileset>
+			</batchtest>
+		 </junit>
+		 <junitreport todir="./reports">
+            <fileset dir="./reports">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report todir="./reports" />
+        </junitreport>
+	</target>
+	<target name="clean">
+		<delete dir="./build" />
+		<delete dir="./reports" />
+		<delete includeemptydirs="true">
+			<fileset dir=".">
+				<include name="selenium*/" />
+				<exclude name="*.zip"/>
+			</fileset>
+		</delete> 
+	</target>
+</project>

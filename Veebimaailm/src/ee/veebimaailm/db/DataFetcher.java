@@ -48,7 +48,8 @@ public class DataFetcher {
 		
 		while (dbresultset.next()) {
 			Party selectedParty = new Party(dbresultset.getInt("id_party"),
-											dbresultset.getString("name")); 
+											dbresultset.getString("name"),
+											dbresultset.getString("color")); 
 			partyList.add(selectedParty);
         }
 		close();
