@@ -27,11 +27,20 @@ function initialize() {
 	generateLegend(map);
 	
 }	
+function getPartys() {
+	var partys;
+	$.getJSON("/server/GetPartys",function (data) {
+		partys = data.partys;
+	});
+	return partys;
+}
 
 function addMarkers(map, addresses) {
 	var geocoder = new google.maps.Geocoder();
 	result = {};
-
+	jQuery.ajaxSetup({async:false});
+	var partys = getPartys();
+	jQuery.ajaxSetup({async:true});
 	addresses.forEach(function(address, index) {
 		setTimeout(function() { 
 						geocoder.geocode({'address': address}, function(results, status) {
@@ -40,13 +49,12 @@ function addMarkers(map, addresses) {
 								var total_votes = 0;
 								jQuery.ajaxSetup({async:false});
 								$.getJSON("/server/GetVotes",{"region_id":index+1},function (data) {
-									console.log(data.partys[0]);
 									winner = data.partys[0];
 									data.partys.forEach(function(party) {
 										total_votes+=party.votes;
 									});
 								});
-								var color = getColorByPartyName(winner.name);
+								var color = getColorByPartyName(winner.name,partys);
 								var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + color,
 									new google.maps.Size(21, 34),
 									new google.maps.Point(0,0),
@@ -72,18 +80,15 @@ function addMarkers(map, addresses) {
 	})
 	
 }
-function getColorByPartyName(name) {
-	switch (name) {
-		case "Eesti Keskerakond":
-			return "B00000";
-		case "Eesti Reformierakond":
-			return "0066FF";
-		case "Isamaa- ja Respublica Liit":
-			return "505050";
-		case "Sotsiaaldemokraatlik erakond":
-			return "FFCC00";
-	}
-	return "FFFFFF";
+function getColorByPartyName(name, partys) {
+	var color = "FFFFFF";
+	partys.forEach(function(party) {
+		if (party.name==name) {
+			color = party.color;
+			return;
+		}
+	});
+	return color;
 }
 
 function addInfoWindow(map, result, location) {
