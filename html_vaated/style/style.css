@@ -131,7 +131,6 @@ a, a:visited {
 	border-width: 3px;
 	border-color: green;
 	position: absolute;
-	display: none;
 	background: #ffffff;
 }
 fieldset.apply-for button {
@@ -471,4 +470,24 @@ fieldset.is_applyed_for {
 #loading_image {
     margin-top: 13%;
     margin-left: 30%;
+}
+#googleMap {
+	width: 940px;
+	height: 617px;
+}
+.aken {
+	width: 50px;
+}
+#legend {
+	font-family: Arial, sans-serif;
+	background: #fff;
+	padding: 10px;
+	margin: 10px;
+	border: 3px solid #000;
+}
+#legend h3 {
+	margin-top: 0;
+}
+#legend img {
+	vertical-align: middle;
 }

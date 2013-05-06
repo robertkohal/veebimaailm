@@ -2,7 +2,8 @@
     <description>
         Veebimaailm tests build file
     </description>
-
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="reports.dir" value="${basedir}/reports" />
 	<path id="compile.classpath">
 		<fileset dir=".">
 			<include name="selenium*/*.jar"/>
@@ -10,15 +11,15 @@
 		</fileset>
 	</path>
 	<path id="test.classpath">
-		<pathelement location="./build/classes" />
+		<pathelement location="${build.dir}/classes" />
 		<fileset dir=".">
 			<include name="selenium*/*.jar"/>
 			<include name="selenium*/libs/*.jar"/>
 		</fileset>
 	</path>
 	<target name="init">
-		<mkdir dir="./build/classes"/>
-		<mkdir dir="./reports"/>
+		<mkdir dir="${build.dir}/classes"/>
+		<mkdir dir="${reports.dir}"/>
 		<unzip dest=".">
 			<fileset dir=".">
 				<include name="selenium*.zip" />
@@ -26,7 +27,7 @@
 		</unzip>
 	</target>
 	<target name="compile" depends="init" >
-		<javac destdir="./build/classes" debug="true" srcdir="./tests/src" encoding="UTF-8">
+		<javac destdir="${build.dir}/classes" debug="true" srcdir="./tests/src" encoding="UTF-8">
 			<classpath refid="compile.classpath"/>
 		</javac>
 	</target>
@@ -34,22 +35,22 @@
 		<junit fork="yes" printsummary="yes" haltonfailure="no">
 			<formatter type="xml" />
 			<classpath refid="test.classpath" />
-			<batchtest fork="yes" todir="./reports" >
-				<fileset dir="./build/classes">
+			<batchtest fork="yes" todir="${reports.dir}" >
+				<fileset dir="${build.dir}/classes">
 					<include name="**/*.class" />
 				</fileset>
 			</batchtest>
 		 </junit>
-		 <junitreport todir="./reports">
-            <fileset dir="./reports">
+		 <junitreport todir="${reports.dir}">
+            <fileset dir=".${reports.dir}">
                 <include name="TEST-*.xml" />
             </fileset>
-            <report todir="./reports" />
+            <report todir="${reports.dir}" />
         </junitreport>
 	</target>
 	<target name="clean">
-		<delete dir="./build" />
-		<delete dir="./reports" />
+		<delete dir="${build.dir}" />
+		<delete dir="${reports.dir}" />
 		<delete includeemptydirs="true">
 			<fileset dir=".">
 				<include name="selenium*/" />

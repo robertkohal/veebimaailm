@@ -439,12 +439,14 @@ function updateContent(data, filename, params) {
 			updateStatisticsTable(data,selection);
 		});
 		}
-		var ws = new WebSocket("ws://veebimaailm.dyndns.info/server/VotesUpdate",'echo-protocol');
-		ws.onopen = function(){
-		};
-		ws.onmessage = function(message){
-			$("#politics-party").change();
-		};
+		if (window.location.protocol!=='https:') {
+			var ws = new WebSocket("ws://veebimaailm.dyndns.info/server/VotesUpdate",'echo-protocol');
+			ws.onopen = function(){};
+			ws.onmessage = function(message){
+				$("#politics-party").change();
+			};
+		}
+		
 		getAllVotes();
 	/* kandideerimise fail */	
     } else if (filename=="kandideerimine.html") {

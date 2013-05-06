@@ -2,7 +2,7 @@ CACHE MANIFEST
 /style/style.css
 /h22letamine.html
 /header.html
-/indeks.html
+/index.html
 /kandideerimine.html
 /kkk.html
 /nimekiri.html
@@ -11,3 +11,7 @@ CACHE MANIFEST
 /script/ajax_querys.js
 /script/contentloader.js
 /script/header.js
+/script/modenizr.min.js
+/script/jquery-ui.min.js
+/script/jquery-1.9.1.min.js
+/script/gmaps.js

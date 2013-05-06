@@ -4,7 +4,7 @@ $(document).ready(function() {
     $(document).ajaxSend(function (event, request, settings) {
         request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     });
-
+	/* INCLUDE PAGES */
 	$(".js-include").each(function(){
         var inc=$(this);
         if (typeof $("#header")[0]!="undefined") {
@@ -61,6 +61,7 @@ function linkClicked(event,params) {
 	
 	return false;
 }
+/* Login boxi genereerimine */
 function generateloginbox() {
 	if (window.location.protocol!=='https:') {
 		generateNotLogedIn();
@@ -114,6 +115,7 @@ function login() {
 	event.preventDefault();
 	return;
 }
+/* Kontrollib, kas toetatakse HTML5 local storaget */
 if (Modernizr.localstorage) {
 	console.log("toetab local storaget");
   

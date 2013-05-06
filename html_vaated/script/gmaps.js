@@ -18,56 +18,35 @@ function initialize() {
 	addMarkers(map, addresses);
 	createLegend(map);
 }	
-/*var labelText = "City Hall";
 
-        var myOptions = {
-                 content: labelText
-                ,boxStyle: {
-                   border: "1px solid black"
-                  ,textAlign: "center"
-                  ,fontSize: "8pt"
-                  ,width: "50px"
-                 }
-                ,disableAutoPan: true
-                ,pixelOffset: new google.maps.Size(-25, 0)
-                ,position: myCenter
-                ,closeBoxURL: ""
-                ,isHidden: false
-                ,pane: "mapPane"
-                ,enableEventPropagation: true
-        };
-
-        var ibLabel = new InfoBox(myOptions);
-        ibLabel.open(map);
-
-*/
 function addMarkers(map, addresses) {
 	var geocoder = new google.maps.Geocoder();
 	result = {};
-	addresses.forEach(function(address,region) {
+	addresses.forEach(function (address,region) {
 		region = region+1;
-		setTimeout(function() { 
-						geocoder.geocode({'address': address}, function(results, status) {
-			if (status == google.maps.GeocoderStatus.OK) {
-				var lat = results[0].geometry.location.lat();
-				var lng = results[0].geometry.location.lng();
-				var geolocation = new google.maps.LatLng(lat,lng);
-				var marker=new google.maps.Marker({
-					position: geolocation,
-					map: map,
-					icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-				});
-				addInfoWindow(map, marker, region, geolocation);
-				
-			} else {
-				
-				result = "Unable to find address: " + status;
-				console.log(result);
-			}
-		})},5000*Math.random());
-		
+		function addMarker() {
+			geocoder.geocode({'address': address}, function(results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					var lat = results[0].geometry.location.lat();
+					var lng = results[0].geometry.location.lng();
+					var geolocation = new google.maps.LatLng(lat,lng);
+					var marker=new google.maps.Marker({
+						position: geolocation,
+						map: map,
+						icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+					});
+					addInfoWindow(map, marker, region, geolocation);
+					
+				} else {
+					
+					result = "Unable to find address: " + status;
+					console.log(result);
+					setTimeout(addMarker,5000*Math.random());
+				}
+			});
+		}
+		return addMarker();
 	})
-	
 }
 
 function addInfoWindow(map, marker, region, geolocation) {

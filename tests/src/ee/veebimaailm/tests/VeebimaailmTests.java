@@ -5,38 +5,44 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class VeebimaailmTests {
 	private WebDriver driver;
 	private Random random;
 	private String pageSource;
-	private int sleepTime = 5000;
+	WebDriverWait wait;
 	
 	@Before
 	public void setUp() throws Exception {
-		File profileDir = new File("./seleniumFirefoxProfile");
+		//File profileDir = new File("./seleniumFirefoxProfile");
+		File profileDir = new File("C:\\Users\\Mkk\\Desktop\\seleniumFirefoxProfile");
 		FirefoxProfile firefoxProfile = new FirefoxProfile(profileDir);
 		firefoxProfile.setAcceptUntrustedCertificates(true);
 		firefoxProfile.setPreference("security.default_personal_cert", "Select Automatically");
+		
 		driver = new FirefoxDriver(firefoxProfile);
+		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 		driver.get("http://veebimaailm.dyndns.info/");
 		random = new Random();
-		Thread.sleep(sleepTime);	
+		wait = new WebDriverWait(driver,15);
 	}
 	
 	@Test
@@ -55,27 +61,33 @@ public class VeebimaailmTests {
 	public void testNominate() throws Exception {
 		logIn();
 		navigate("Kandideeri");
-		pageSource = driver.getPageSource();
-		assertTrue(pageSource.contains("Te ei ole veel kandideerinud."));
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.id("is_voted_text"),"Te ei ole veel kandideerinud."));
 		
 		int region_id = random.nextInt(17)+1;
 		int party_id = random.nextInt(4)+1;
-		selectParty(party_id);
 		selectRegion(region_id);
+		selectParty(party_id);
+		
+		
 		nominate();
-		pageSource = driver.getPageSource();
-		assertTrue(pageSource.contains("Te olete kandideerinud."));
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.id("is_voted_text"),"Te olete kandideerinud."));
 		
 		navigate("Statistika");
-		selectParty(party_id);
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.className("name"), "Erakond"));
 		selectRegion(region_id);
-		Thread.sleep(sleepTime);
+		selectParty(party_id);
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.className("name"), "Nimi"));
 		assertTrue(candidateExists("MARI-LIIS MÃ?NNIK"));
 		
 		navigate("Kandideeri");
 		cleanupNominate();
-		pageSource = driver.getPageSource();
-		assertTrue(pageSource.contains("Te ei ole veel kandideerinud."));
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.id("is_voted_text"),"Te ei ole veel kandideerinud."));
+		
 		logOut();
 		
 	}
@@ -85,33 +97,45 @@ public class VeebimaailmTests {
 		String candidateName = "Eduard Ekskavaator";
 		String candidateNameLetters = "eksk";
 		navigate("Statistika");
+		
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.className("name"), "Erakond"));
 		searchCandidateByLetters(candidateNameLetters);
+		
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.className("name"), "Nimi"));
 		int priorVoteCount = votesByCandidate(candidateName);
 		if (priorVoteCount==-1) {
 			fail("Could not found Candidate");
 		}
 		
 		navigate("Hääleta");
-		pageSource = driver.getPageSource();
-		assertTrue(pageSource.contains("Te ei ole veel hääletanud."));
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.id("is_voted_text"), "Te ei ole veel hääletanud."));
 		
 		searchCandidateByLetters(candidateNameLetters);
-		Date date = new Date();
+		//Date date = new Date();
 		voteForCandidate(candidateName);
-		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-		pageSource = driver.getPageSource();
-		assertTrue(pageSource.contains("Te olete juba hääletanud.["+dateFormat.format(date)+"]"));
+		//DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.id("is_voted_text"), "Te olete juba hääletanud."));
 		
 		navigate("Statistika");
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.className("name"), "Erakond"));
+		
 		searchCandidateByLetters(candidateNameLetters);
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.className("name"), "Nimi"));
 		int currentVoteCount = votesByCandidate(candidateName);
 		if (priorVoteCount>=currentVoteCount) {
 			fail("Vote count didn't increased.");
 		}
+		
 		navigate("Hääleta");
 		cleanupVote();
-		pageSource = driver.getPageSource();
-		assertTrue(pageSource.contains("Te ei ole veel hääletanud."));
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.textToBePresentInElement(By.id("is_voted_text"), "Te ei ole veel hääletanud."));
 		logOut();	
 	}
 	@Test
@@ -123,15 +147,12 @@ public class VeebimaailmTests {
 		navigate("Hääleta");
 		
 		selectRegion(region_id);
-		Thread.sleep(sleepTime);
 		assertTrue(candidateExists(candidateName));
 		
 		selectParty(party_id);
-		Thread.sleep(sleepTime);
 		assertTrue(candidateExists(candidateName));
 		
 		selectRegion(0);
-		Thread.sleep(sleepTime);
 		assertTrue(candidateExists(candidateName));
 		
 		logOut();
@@ -141,32 +162,36 @@ public class VeebimaailmTests {
 	private void logIn() throws Exception {
 		WebElement loginbutton = driver.findElement(By.id("loginlink"));
 		loginbutton.click();
-		Thread.sleep(sleepTime);
+		waitForPageLoaded(driver);
+		Thread.sleep(1000);
 		WebElement loginbutton2 = driver.findElement(By.id("loginlink"));	
 		loginbutton2.click();
-		Thread.sleep(sleepTime);	
+		WebElement loginname = driver.findElement(By.id("namefield"));
 	}
 	private void logOut() throws Exception {
 		WebElement logoutButton = driver.findElement(By.name("Submit"));
 		logoutButton.click();
-		Thread.sleep(sleepTime);
+		WebElement loginForm = driver.findElement(By.id("loginlink"));
 	}
 	private void navigate(String linkText) throws Exception {
+		wait.until(ExpectedConditions.elementToBeClickable(By.linkText(linkText)));
 		WebElement link = driver.findElement(By.linkText(linkText));
 		link.click();
-		Thread.sleep(sleepTime);
 	}
 	private void nominate() throws Exception {
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("submitbutton")));
 		WebElement submitButton = driver.findElement(By.id("submitbutton"));
 		submitButton.click();
-		Thread.sleep(sleepTime);
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("button")));
 		List<WebElement> choiceButtons = driver.findElements(By.tagName("button"));
 		for (WebElement button: choiceButtons) {
 			if (button.getText().equals("Jah")) {
 				button.click();
+				return;
 			}
 		}
-		Thread.sleep(sleepTime*2);
 	}
 	private void selectRegion(int region_id) {
 		Select select_region = new Select(driver.findElement(By.id("districts")));
@@ -178,6 +203,9 @@ public class VeebimaailmTests {
 		
 	}
 	private boolean candidateExists(String name) {
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.className("name")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("voting-table-body")));
 		WebElement statisticTable = driver.findElement(By.id("voting-table-body"));
 		List<WebElement> nameColumns = statisticTable.findElements(By.className("name"));
 		for (WebElement column: nameColumns) {
@@ -191,14 +219,15 @@ public class VeebimaailmTests {
 	private void cleanupNominate() throws Exception {
 		WebElement cancelButton = driver.findElement(By.id("cancel_nominate"));
 		cancelButton.click();
-		Thread.sleep(sleepTime*2);
 	}
 	private void searchCandidateByLetters(String letters) throws Exception {
 		WebElement searchField = driver.findElement(By.id("search-candidate"));
 		searchField.sendKeys(letters);
-		Thread.sleep(sleepTime);
 	}
 	private int votesByCandidate(String name) {
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.className("name")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("voting-table-body")));
 		WebElement statisticTable = driver.findElement(By.id("voting-table-body"));
 		List<WebElement> nameColumns = statisticTable.findElements(By.className("name"));
 		for (WebElement column: nameColumns) {
@@ -211,13 +240,15 @@ public class VeebimaailmTests {
 		return -1;
 	}
 	private void voteForCandidate(String name) throws Exception  {
+		waitforAJAXRequestsToComplete(driver);
+		wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.className("name")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("voting-table-body")));
 		WebElement votingTable = driver.findElement(By.id("voting-table-body"));
 		List<WebElement> nameColumns = votingTable.findElements(By.className("name"));
 		for (WebElement column: nameColumns) {
 			if (column.getText().equals(name)) {
 				WebElement votingColumn = column.findElement(By.xpath("./following::td[@class='vote'][1]/p"));
 				votingColumn.click();
-				Thread.sleep(sleepTime*2);
 				return;
 			}
 			continue;
@@ -226,8 +257,37 @@ public class VeebimaailmTests {
 	private void cleanupVote() throws Exception {
 		WebElement cancelButton = driver.findElement(By.id("cancel_vote"));
 		cancelButton.click();
-		Thread.sleep(sleepTime*2);
 	}
+	public void waitForPageLoaded(WebDriver driver) {
+		//http://stackoverflow.com/questions/13244225/selenium-how-to-make-the-web-driver-to-wait-for-page-to-refresh-before-executin
+		ExpectedCondition<Boolean> expectation = new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+	        }
+	    };
+
+	    Wait<WebDriver> wait = new WebDriverWait(driver,30);
+	    try {
+	    	wait.until(expectation);
+	    } catch(Throwable error) {
+	    	assertFalse("Timeout waiting for Page Load Request to complete.",true);
+	    }
+	 }
+	//http://stackoverflow.com/questions/8048463/how-would-you-use-events-with-selenium-2
+	public void waitforAJAXRequestsToComplete(WebDriver driver){
+		ExpectedCondition<Boolean> expectation = new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				return ((JavascriptExecutor)driver).executeScript("return jQuery.active").toString().equals("0");
+	        }
+	    };
+	    Wait<WebDriver> wait = new WebDriverWait(driver,30);
+	    try {
+	    	wait.until(expectation);
+	    } catch(Throwable error) {
+	    	assertFalse("Timeout waiting for Page Load Request to complete.",true);
+	    }
+  
+    }
 	@After
 	public void tearDown() throws Exception {
 		driver.close();
