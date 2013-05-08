@@ -1,7 +1,7 @@
 package ee.veebimaailm.db;
 
 public class FetcherQueries {
-	final protected static String getAllFromRegion = "SELECT * FROM region";
+	final protected static String getAllFromRegion = "SELECT id_region,name,X(center_point) AS Longitude,Y(center_point) AS latitude FROM region";
 	
 	final protected static String getAllFromParty = "SELECT * FROM party";
 	

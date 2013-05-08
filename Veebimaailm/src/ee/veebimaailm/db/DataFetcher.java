@@ -34,7 +34,9 @@ public class DataFetcher {
 		
 		while (dbresultset.next()) {
 			Region selectedRegion = new Region(dbresultset.getInt("id_region"),
-											   dbresultset.getString("name")); 
+											   dbresultset.getString("name"),
+											   dbresultset.getDouble("longitude"),
+											   dbresultset.getDouble("latitude")); 
 			regionList.add(selectedRegion);
         }
 		close();

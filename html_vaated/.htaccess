@@ -1,0 +1,35 @@
+
+RewriteEngine On
+
+RewriteRule ^$  /index.html?page=index [L,R]
+#RewriteCond %{QUERY_STRING} ^$
+#RewriteRule ^index.html$  /index.html?page=index [L,R]
+
+AddType text/cache-manifest .manifest
+AddType application/javascript .js
+
+# compress text, html, javascript, css, xml:
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/xml
+AddOutputFilterByType DEFLATE application/xhtml+xml
+AddOutputFilterByType DEFLATE application/rss+xml
+AddOutputFilterByType DEFLATE application/javascript
+#Expiretion
+<IfModule mod_expires.c>
+
+	ExpiresActive On
+
+	ExpiresByType image/x-icon "access plus 1 year”
+
+	ExpiresByType image/gif "access plus 1 month"
+	ExpiresByType image/png "access plus 1 month"
+	ExpiresByType image/jpg "access plus 1 month"
+	ExpiresByType image/jpeg "access plus 1 month"
+
+	ExpiresByType text/css "access plus 1 month”
+
+	ExpiresByType application/javascript "access plus 1 week"
+</IfModule>

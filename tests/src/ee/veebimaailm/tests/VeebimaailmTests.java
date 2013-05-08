@@ -32,8 +32,8 @@ public class VeebimaailmTests {
 	
 	@Before
 	public void setUp() throws Exception {
-		//File profileDir = new File("./seleniumFirefoxProfile");
-		File profileDir = new File("C:\\Users\\Mkk\\Desktop\\seleniumFirefoxProfile");
+		File profileDir = new File("./seleniumFirefoxProfile");
+		//File profileDir = new File("C:\\Users\\Mkk\\Desktop\\seleniumFirefoxProfile");
 		FirefoxProfile firefoxProfile = new FirefoxProfile(profileDir);
 		firefoxProfile.setAcceptUntrustedCertificates(true);
 		firefoxProfile.setPreference("security.default_personal_cert", "Select Automatically");

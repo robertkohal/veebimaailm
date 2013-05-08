@@ -17,6 +17,7 @@ a, a:visited {
 	color: #302e2f;
 	text-decoration: none;
 }
+
 #page-wrap {
 	min-height: 400px;
 	width: 940px;
@@ -40,8 +41,9 @@ a, a:visited {
 	border-bottom: 1px solid #302e2f;
 }
 #footer {
-	background: #ff;
+	background: #caeefc;
 	min-height: 50px;
+	border-top: 1px solid #302e2f;
 }
 #logo {
 	font-size: 32px;
@@ -65,6 +67,9 @@ a, a:visited {
 #abi-img {
 	margin-left: 10px;
 	margin-top: 10px;
+	width: 120px;
+	height: 120px;
+	
 }
 #main-menu {
 	clear: both;
@@ -80,6 +85,9 @@ a, a:visited {
 }
 #main-menu ul li:hover a {
 	color: #888;
+}
+.activetab {
+	font-weight: bold;
 }
 #login {
 	width: 200px;
@@ -170,7 +178,7 @@ table.voting-table th.party {
 	width: 47%;
 }
 table.voting-table th.vote {
-	width: *;
+	width: auto;
 }
 table.voting-table .candidate_id {
 	display: none;
@@ -470,6 +478,8 @@ fieldset.is_applyed_for {
 #loading_image {
     margin-top: 13%;
     margin-left: 30%;
+	width: 215px;
+	height: 215px;
 }
 #googleMap {
 	width: 940px;
@@ -490,4 +500,12 @@ fieldset.is_applyed_for {
 }
 #legend img {
 	vertical-align: middle;
+}
+#idCardPicture  {
+	width: 88px;
+	height: 31px;
+}
+#logoPicture {
+	width: 100px;
+	height: 100px;
 }
