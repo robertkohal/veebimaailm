@@ -1,6 +1,5 @@
 function initialize() {
 	"use strict";
-
 	var myCenter = new google.maps.LatLng(58.7682,25.266723);
 	var mapProp = {
 		center:myCenter,
@@ -23,7 +22,6 @@ function initialize() {
 
 function addMarkers(map,partys, regions) {
 	"use strict";
-	var result = {};
 	regions.forEach(function (region,indeks) {
 		indeks = indeks+1;
 		var leader = [{"votes":-1}];
@@ -38,17 +36,16 @@ function addMarkers(map,partys, regions) {
 		jQuery.ajaxSetup({async:true});
 		var lat = region.latitude;
 		var lng = region.longitude;
-		console.log("Lat: "+lat);
-		console.log("Lng: "+lng);
 		var geolocation = new google.maps.LatLng(lat,lng);
 		var markerImage = getMarkerImageByPartyName(leader.name,partys);
 		var marker=new google.maps.Marker({
 						position: geolocation,
 						map: map,
-						icon: markerImage,
+						icon: markerImage
 		});
-		if (total_votes==0)
+		if (total_votes===0) {
 			total_votes=1;
+		}
 		var labelText = "<div class='infowindow'>Juhtiv erakond: "+leader.name+" Hääli protsentuaalselt: "+ ((leader.votes*100)/total_votes).toFixed(1)+"%</div>";
 		addInfoWindow(map, labelText,geolocation);					
 	});
@@ -73,7 +70,7 @@ function getColorByPartyName(name, partys) {
 	"use strict";
 	var color = "FFFFFF";
 	partys.forEach(function(party) {
-		if (party.name==name) {
+		if (party.name===name) {
 			color = party.color;
 			return;
 		}
@@ -81,10 +78,12 @@ function getColorByPartyName(name, partys) {
 	return color;
 }
 function getMarkerImageByPartyName(party_name,partys) {
+	"use strict";
 	var markerImage= "";
 	partys.forEach(function(party) {
-		if (party.name===party_name) 
+		if (party.name===party_name) {
 			markerImage=party.markerimage;
+		}
 	});
 	return markerImage;
 }

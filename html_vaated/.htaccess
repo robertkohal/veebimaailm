@@ -33,3 +33,7 @@ AddOutputFilterByType DEFLATE application/javascript
 
 	ExpiresByType application/javascript "access plus 1 week"
 </IfModule>
+#<FilesMatch "\. (js|css)$">
+#	Header set Cache-Control "private"
+#	Header append Vary Accept-Encoding
+#</FilesMatch>

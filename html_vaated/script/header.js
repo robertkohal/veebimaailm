@@ -27,7 +27,6 @@ $(document).ready(function() {
     });
 	
 	window.addEventListener('popstate', function(event) {
-		console.log('popstate fired!');
 		var filename = event.target.location.href;
 		var current_local_part = "";
 		if (filename!=="") {
@@ -87,7 +86,7 @@ function generateNotLogedIn() {
 	$("#login").empty();
 	var html = "<p>Logi sisse ID-kaardiga</p>" +
 				"<a href='#' id='loginlink'>" +
-				"<img src='images/idkaart.gif' title='Sisse logimiseks tuleb vajutada vähemalt 2 korda ID-kaardi pildil. ID-kaart peab olema juba lugejas. Esimest korda suunatakse https-lehele ning alles teisel korral alles toimub reaalne sisselogimine.' /></a>";
+				"<img width='88' height='31' src='images/idkaart.gif' alt='Sisse logimine' title='Sisse logimiseks tuleb vajutada vähemalt 2 korda id kaardi pildil. ID-kaart peab olema juba lugejas.  Esimest korda suunatakse https-lehele ning alles teisel korral alles toimub reaalne sisselogimine.'/>";
 	$("#login").append(html);
 	$("#loginlink").bind("click",login);
  

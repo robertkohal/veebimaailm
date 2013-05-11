@@ -28,7 +28,9 @@ function querydb(event) {
 		params = {"region_id":districts};
 		uriparams = "&region_id="+districts;
 	} else {
-		return;
+		selection = 1;
+		params = {};
+		uriparams = "";
 	}
     $("#loading").show();
 	if (navigator.onLine===true) {
@@ -56,7 +58,6 @@ function querydb(event) {
 function updateTableContent(data, event, selection, uriparams) {
 	"use strict";
 	if (event.data.url==="vote") {
-		console.log(selection);
 		updateTable(data,selection);
 	} else {
 		updateStatisticsTable(data,selection);
@@ -113,9 +114,13 @@ function updateTable(data,selection) {
 function vote(event) {
 	"use strict";
 	event.preventDefault();
-	$.post("/server/private/Vote", JSON.stringify({"action":"vote","candidate_id":event.data.id,"sura":"sfa"}), function() {
-		postToServer();
-	window.location.reload();
+	$.post("/server/private/Vote", JSON.stringify({"action":"vote","candidate_id":event.data.id,"sura":"sfa"}), function(data) {
+		if (data.result==="alreadyVoted") {
+			alert("Te olete juba hääletanud.");
+		} else if (data.result==="success") {
+			postToServer();
+			votedBox(data);
+		}
 	});
 }
 function updateStatisticsTable(data,selection) {
@@ -272,6 +277,9 @@ function getFileNameByPageParam(page) {
 		case "statistics":
 			filename = "statistika.html";
 			break;
+		case "kkk":
+			filename = "kkk.html";
+			break;
 	}
 	return filename;
 }
@@ -293,10 +301,8 @@ function search(force,event) {
 		return;
 	}
 	var selection=4;
-	/* online / offline */
 	if (navigator.onLine===true) {
 		$.getJSON('/server/GetVotes',{"letters":existingString}, function(data) {
-			console.log(event.target.textContent);
 			updateLetterSearch(data,selection,existingString,event);
 		});
 	} else {
@@ -338,12 +344,11 @@ function updateContent(data, filename, params) {
 		}
 	}
 	$("#content").empty();
-	console.log("failinimi "+ filename);
     if (filename==="index.html") {
         $("#content").append("<h1>Hääletamise hetkeseis</h1><div id='googleMap'></div><div id='legend'><h3>Legend</h3></div>");
-        $("#loading").hide();
 		initialize();
-        return;
+		$("#loading").hide();
+		return;
     } else if (filename==="h22letamine.html" || filename==="kandideerimine.html") {
 		
 		var loggedin = false;
@@ -407,23 +412,9 @@ function updateContent(data, filename, params) {
 		$.getJSON('/server/private/Vote', function(data) {
 			$("#is_voted_text").empty();
 			if (data.result==="alreadyVoted") {
-				var date = new Date(data.timestamp);
-				var day = date.getDate();
-				var month = ("0"+(date.getMonth()+1)).slice(-2);
-				var year = date.getFullYear();
-				var vote_for_date = "["+day+"."+month+"."+year+"]";
-				$("#is_voted_text").html("Te olete juba hääletanud."+vote_for_date+"<br/><br/><a href='h22letamine.html' id='cancel_vote'>Tühista hääl</a>");
-				$(".is_voted_for").css({"background":"#006600"});
-				$("#cancel_vote").click(function(event) {
-					event.preventDefault();
-					$.post("/server/private/Vote", JSON.stringify({"action":"cancel"}), function() {
-						postToServer();
-						window.location.reload();
-					});
-				});
+				votedBox(data);
 			} else {
-				$(".is_voted_for").css({"background":"#ff7b2b"});
-				$("#is_voted_text").html("Te ei ole veel hääletanud.");
+				notVotedBox();
 			}
 		});
         
@@ -461,12 +452,18 @@ function updateContent(data, filename, params) {
 				$("#politics-party").change();
 			};
 		}
-		if (window.addEventListener)
-			window.addEventListener("load", downloadJSAtOnload, false);
-		else if (window.attachEvent)
-			window.attachEvent("onload", downloadJSAtOnload);
-		else 
-			window.onload = downloadJSAtOnload;
+		var scriptname_downloader = "script/votesDownloader.js";
+		var scripts_downloader = document.getElementsByTagName('script');
+		var scriptexists_1=false;
+		for (var j=0;j<scripts_downloader.length;j++) {
+			if (scripts_downloader[j].src.indexOf(scriptname_downloader)!==-1) {
+				scriptexists_1=true;
+				break;
+			}
+		}
+		if (!scriptexists_1) {
+			downloadJSAtOnload(scriptname_downloader);
+		}
 	/* kandideerimise fail */	
     } else if (filename==="kandideerimine.html") {
         $("#districts").bind("change",hideSelectionError);
@@ -477,22 +474,24 @@ function updateContent(data, filename, params) {
 		$.getJSON('/server/private/Nominate', function(data) {
 			$("#is_voted_text").empty();
 			if (data.result==="alreadyNominated") {
-				$("#is_voted_text").html("Te olete kandideerinud.<br/><br/><a href='kandideerimine.html' id='cancel_nominate'>Tühista kandideerimine</a>");
-				$(".is_applyed_for").css({"background":"#006600","margin-right":"50%"});
-				$("#cancel_nominate").click(function(event) {
-					event.preventDefault();
-					$.post("/server/private/Nominate", JSON.stringify({"action":"cancel"}), function() {
-						postToServer();
-						window.location.reload();
-					});
-				});
+				nominatedBox(data);
 			} else {
-				$(".is_voted_for").css({"background":"#ff7b2b"});
-				$("#is_voted_text").html("Te ei ole veel kandideerinud.");
+				notNominatedBox();
 			}
 		});
-        
-	}
+		var scriptname_ui = "script/jquery-ui.min.js";
+		var scripts_ui = document.getElementsByTagName('script');
+		var scriptexists_2=false;
+		for (var k=0;k<scripts_ui.length;k++) {
+			if (scripts_ui[k].src.indexOf(scriptname_ui)!==-1) {
+				scriptexists_2=true;
+				break;
+			}
+		}
+		if (!scriptexists_2) {
+			downloadJSAtOnload(scriptname_ui);
+		}
+    }
 	if (party_id!=="") {
 		$("#politics-party").val(party_id);
 	}	
@@ -512,10 +511,66 @@ function updateContent(data, filename, params) {
 	else if (letters!=="") {
 		$("#search-candidate").keyup();
 	}
-	
     $("#loading").hide();
 	return $("#content").html();
 }
+function votedBox(data) {
+	"use strict";
+	var date = new Date(data.timestamp);
+	var day = date.getDate();
+	var month = ("0"+(date.getMonth()+1)).slice(-2);
+	var year = date.getFullYear();
+	var vote_for_date = "["+day+"."+month+"."+year+"]";
+	$("#is_voted_text").html("Te olete juba hääletanud."+vote_for_date+"<br/><br/><a href='h22letamine.html' id='cancel_vote'>Tühista hääl</a>");
+	$(".is_voted_for").css({"background":"#006600"});
+	$("#cancel_vote").click(function(event) {
+		event.preventDefault();
+		$.post("/server/private/Vote", JSON.stringify({"action":"cancel"}), function(data) {
+			if (data.result==="success") {
+				notVotedBox();
+				postToServer();
+			} else {
+				alert("Esines tõrge: Võimalik, et olete "+
+						"juba oma hääle tühistanud või on sessioon aegunud."+
+						"Proovige lehte uuesti laadida");
+			}
+		});
+	});
+}
+
+function notVotedBox() {
+	"use strict";
+	$(".is_voted_for").css({"background":"#ff7b2b"});
+	$("#is_voted_text").html("Te ei ole veel hääletanud.");
+}
+function notNominatedBox() {
+	"use strict";
+	$(".is_applyed_for").css({"background":"#ff7b2b"});
+	$("#is_voted_text").html("Te ei ole veel kandideerinud.");
+}
+function nominatedBox(data) {
+	"use strict";
+	if (typeof data.party==='undefined' || typeof data.region==='undefined' ) {
+		data.party = $('#politics-party :selected').text();
+		data.region = $('#districts :selected').text();
+	}
+	$("#is_voted_text").html("Te olete kandideerinud.<br/><br/>Piirkond: "+data.region+"<br/><br/>Erakond: "+data.party+"<br/><br/><a href='kandideerimine.html' id='cancel_nominate'>Tühista kandideerimine</a>");
+	$(".is_applyed_for").css({"background":"#006600","margin-right":"40%"});
+	$("#cancel_nominate").click(function(event) {
+		event.preventDefault();
+		$.post("/server/private/Nominate", JSON.stringify({"action":"cancel"}), function(data) {
+			if (data.result==="success") {
+				notNominatedBox();
+				postToServer();
+			} else {
+				alert("Esines tõrge: Võimalik, et olete "+
+						"juba oma kandideerimise tühistanud või on sessioon aegunud."+
+						"Proovige lehte uuesti laadida");
+			}
+		});
+	});
+}
+
 function updateLetterSearch(data,selection,existingString,event) {
 	"use strict";
 	updateStatisticsTable(data,selection);
@@ -586,7 +641,6 @@ function valitadeQuestionary(event) {
                             });
         return false;                    
     }
-    return true; 
 }
 /* Kandideeri hääletamisele */
 function applyFor(party_id,region_id) {
@@ -594,8 +648,10 @@ function applyFor(party_id,region_id) {
 	$.post("/server/private/Nominate", JSON.stringify({"action":"nominate","region_id":region_id,"party_id":party_id}), function(data) {   
 		if (data.result==="success") {
 			postToServer();
-			window.location.reload();
-		} 
+			nominatedBox(data);
+		} else if (data.result==="alreadyNominated") {
+			alert("Te olete juba kandideerinud.");
+		}
 	});
 }
 
@@ -700,8 +756,9 @@ function reverseNumberColumn(a,b) {
 	var votesForB = parseInt($(b).children(".vote").text(),10);
 	return votesForB-votesForA;
 }
-function downloadJSAtOnload() {
+function downloadJSAtOnload(scriptlocation) {
+	"use strict";
 	var element = document.createElement("script");
-	element.src = "script/votesDownloader.js";
+	element.src = scriptlocation;
 	document.body.appendChild(element);
 }

@@ -27,6 +27,7 @@ import ee.veebimaailm.db.DataFetcher;
 public class GetRegions extends HttpServlet {
 
 	private String jsonresponse;
+	private long initTime;
 	private static final long serialVersionUID = 1L;
   
     /**
@@ -52,6 +53,7 @@ public class GetRegions extends HttpServlet {
 		}
 		RegionList list = new RegionList(regionList);
         jsonresponse = gson.toJson(list);
+        initTime = System.currentTimeMillis() /1000 * 1000;
 	    
 	}
 	/**
@@ -60,6 +62,9 @@ public class GetRegions extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().write(jsonresponse);
+	}
+	protected long getLastModified(HttpServletRequest request) {
+		return initTime;
 	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

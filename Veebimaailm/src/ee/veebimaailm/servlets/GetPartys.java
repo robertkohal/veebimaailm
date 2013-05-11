@@ -27,6 +27,7 @@ import ee.veebimaailm.db.DataFetcher;
 public class GetPartys extends HttpServlet {
 	
 	private String jsonresponse;
+	private long initTime;
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -58,6 +59,7 @@ public class GetPartys extends HttpServlet {
 		}
 		PartyList list = new PartyList(partyList);
         jsonresponse = gson.toJson(list);
+        initTime = System.currentTimeMillis() /1000 * 1000;
 	}
 	
 	/**
@@ -68,5 +70,7 @@ public class GetPartys extends HttpServlet {
 		//request.getSession();
 		response.getWriter().write(jsonresponse);
 	}
-
+	protected long getLastModified(HttpServletRequest request) {
+		return initTime;
+	}
 }

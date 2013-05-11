@@ -58,6 +58,7 @@ public class Nominate extends HttpServlet {
 		UserOperationResponse nominateresponse = new UserOperationResponse();
 		
 		if (request.getMethod().equals("GET")) {
+			System.out.println("siin");
 			DataFetcher datafetcher;
 			Boolean isNominated = false;
 			try {
@@ -65,6 +66,10 @@ public class Nominate extends HttpServlet {
 				isNominated = datafetcher.isNominatedByPerson(person_id);
 				if (isNominated.booleanValue()) {
 					nominateresponse.setResult("alreadyNominated");
+					datafetcher = new DataFetcher(getServletContext());
+					String[] partyAndregion = datafetcher.getPartyAndRegionByPerson(person_id);
+					nominateresponse.setParty(partyAndregion[0]);
+					nominateresponse.setRegion(partyAndregion[1]);
 				} else {
 					nominateresponse.setResult("NotNominated");
 				}

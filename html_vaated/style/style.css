@@ -67,9 +67,6 @@ a, a:visited {
 #abi-img {
 	margin-left: 10px;
 	margin-top: 10px;
-	width: 120px;
-	height: 120px;
-	
 }
 #main-menu {
 	clear: both;
@@ -198,7 +195,7 @@ fieldset.apply-for {
 }
 fieldset.is_applyed_for {
 	float: right;
-	margin-right: 44%;
+	margin-right: 40%;
 }
 .clear {
 	clear: both;
@@ -233,73 +230,7 @@ fieldset.is_applyed_for {
 	background: #caeefc;
 	color: #302E2F;
 }
-.statistics-wrapper {
-	/*float: left;*/
-	margin-left: 5px;
-}
-.statistics-wrapper .diagram {
-	border-left: 3px solid #000;
-	border-bottom: 3px solid #000;
-	background: #fff;
-	height: 300px;
-	width: 400px;
-	position: relative;
-	float: left;
-}
-.statistics-wrapper .diagram div {
-	width: 40px;
-	float: left;
-	bottom: 0;
-	position: absolute;
-	border: 3px solid #000;
-	border-bottom: 0px solid #000;
-	color: #000;
-}
-.statistics-wrapper .diagram div > span {
-	display: block;
-	-webkit-transform: rotate(-90deg); 
-	-moz-transform: rotate(-90deg);	
-	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-}
-.statistics-wrapper .eee {
-	height: 100px;
-	background: red;
-	left: 10px;
-}
-.statistics-wrapper .sm {
-	height: 145px;
-	background: #888;
-	left: 60px;
-}
-.statistics-wrapper .ue {
-	height: 254px;
-	background: pink;
-	left: 110px;
-}
-.statistics-wrapper .ve {
-	height: 250px;
-	left: 160px;
-	background: blue;
-}
-.statistics-wrapper .e1 {
-	height: 240px;
-	left: 210px;
-	background: green;
-}
-.statistics-wrapper .e2 {
-	height: 150px;
-	left: 260px;
-	background: skyblue;
-}
-.statistics-wrapper .e3 {
-	height: 259px;
-	left: 310px;
-	background: salmon;
-}
-.statistics-wrapper .result {
-	float: left;
-	margin-left: 10px;
-}
+
 /* printimise struktuur */
 @media print {
 	#header, #content .buttons, #footer {
@@ -478,8 +409,6 @@ fieldset.is_applyed_for {
 #loading_image {
     margin-top: 13%;
     margin-left: 30%;
-	width: 215px;
-	height: 215px;
 }
 #googleMap {
 	width: 940px;
@@ -500,12 +429,4 @@ fieldset.is_applyed_for {
 }
 #legend img {
 	vertical-align: middle;
-}
-#idCardPicture  {
-	width: 88px;
-	height: 31px;
-}
-#logoPicture {
-	width: 100px;
-	height: 100px;
 }

@@ -123,5 +123,10 @@ public class FetcherQueries {
 												"FROM candidate,person "+ 
 												"WHERE person.id_person=candidate.id_person "+
 												"ORDER BY votes DESC;";
-															
+	final protected static String getPartyAndRegionByPerson = "SELECT party.name AS partyName," +
+															  " region.name AS regionName " +
+															  "FROM party,region,candidate " +
+															  "WHERE candidate.id_region=region.id_region " +
+															  "AND candidate.id_party=party.id_party " +
+															  "AND candidate.id_candidate=?";														
 }
