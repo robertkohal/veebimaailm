@@ -309,12 +309,12 @@ public class DataFetcher {
 		String[] partyAndRegion = new String[2];
 		predbstatement = dbconnection.prepareStatement(FetcherQueries.getPartyAndRegionByPerson);
 		predbstatement.setInt(1, person_id);
-
 		dbresultset = predbstatement.executeQuery();
-		dbresultset.next();
+		while (dbresultset.next()) {
 		
-		partyAndRegion[0] = dbresultset.getString("partyName");
-		partyAndRegion[1] = dbresultset.getString("regionName");
+			partyAndRegion[0] = dbresultset.getString("partyName");
+			partyAndRegion[1] = dbresultset.getString("regionName");
+		}
 		return partyAndRegion;
 	}
 }

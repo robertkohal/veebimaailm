@@ -449,7 +449,14 @@ function updateContent(data, filename, params) {
 			var ws = new WebSocket("ws://veebimaailm.dyndns.info/server/VotesUpdate",'echo-protocol');
 			ws.onopen = function(){};
 			ws.onmessage = function(){
-				$("#politics-party").change();
+				var filename = location.href;
+				current_local_part = filename.split("?")[1];
+				console.log(current_local_part);
+				if (current_local_part.indexOf("letters")!==-1) {
+					$("#search-candidate").keyup();
+				} else {
+					$("#politics-party").change();
+				}
 			};
 		}
 		var scriptname_downloader = "script/votesDownloader.js";

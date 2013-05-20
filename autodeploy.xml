@@ -1,0 +1,57 @@
+<project name="Veebimaailm" default="setup" basedir=".">
+    <description>
+        Automatic deploy
+    </description>
+	<property name="project.home" value="${basedir}/veebimaailm/Veebimaailm" />
+	<path id="compile.classpath">
+		<fileset dir="${project.home}/WebContent/WEB-INF/lib">
+			<include name="*.jar"/>
+		</fileset>
+		<fileset dir="C:/Program Files/Apache/apache-tomcat-7.0.37/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<target name="setup">
+		<antcall target="cleanAndDeploy"/>
+	</target>
+	<target name="init">
+		<mkdir dir="${project.home}/build/classes"/>
+		<mkdir dir="${project.home}/dist" />
+	</target>
+	<target name="compile" depends="init" >
+		<javac destdir="${project.home}/build/classes" debug="true" srcdir="${project.home}/src">
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+	<target name="war" depends="compile">
+		<war destfile="${project.home}/dist/veebimaailm.war" webxml="${project.home}/WebContent/WEB-INF/web.xml">
+			<fileset dir="${project.home}/WebContent"/>
+			<!--<lib dir="${project.home}/WebContent/WEB-INF/lib"/>-->
+			<classes dir="${project.home}/build/classes"/>
+		</war>
+	</target>
+	<target name="cleanAndDeploy" depends="war">
+		<sshexec host="54.241.212.34"
+			username="ec2-user"
+			keyfile="C:/Users/Mkk/Desktop/Veebirakenduste loomine/Amazoni EC2/openssh_key_ec2"
+			trust="true"
+			passphrase=""
+			command="sudo /etc/init.d/tomcat7 stop;sudo /bin/rm -rf /usr/share/tomcat7/webapps/*"/>
+		<scp file="${project.home}/dist/veebimaailm.war"
+			todir="ec2-user@54.241.212.34:/usr/share/tomcat7/webapps" 
+			keyfile="C:/Users/Mkk/Desktop/Veebirakenduste loomine/Amazoni EC2/openssh_key_ec2"
+			trust="true"
+			passphrase=""
+		/>
+		<sshexec host="54.241.212.34"
+			username="ec2-user"
+			keyfile="C:/Users/Mkk/Desktop/Veebirakenduste loomine/Amazoni EC2/openssh_key_ec2"
+			trust="true"
+			passphrase=""
+			command="sudo /etc/init.d/tomcat7 start"/>
+	</target>
+	<target name="clean">
+		<delete dir="${project.home}/dist" />
+		<delete dir="${project.home}/build" />
+	</target>
+</project>

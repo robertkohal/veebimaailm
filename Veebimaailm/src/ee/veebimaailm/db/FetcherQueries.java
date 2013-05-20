@@ -128,5 +128,5 @@ public class FetcherQueries {
 															  "FROM party,region,candidate " +
 															  "WHERE candidate.id_region=region.id_region " +
 															  "AND candidate.id_party=party.id_party " +
-															  "AND candidate.id_candidate=?";														
+															  "AND candidate.id_person=?";														
 }

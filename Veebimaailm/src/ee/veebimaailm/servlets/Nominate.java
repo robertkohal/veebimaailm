@@ -58,7 +58,6 @@ public class Nominate extends HttpServlet {
 		UserOperationResponse nominateresponse = new UserOperationResponse();
 		
 		if (request.getMethod().equals("GET")) {
-			System.out.println("siin");
 			DataFetcher datafetcher;
 			Boolean isNominated = false;
 			try {
